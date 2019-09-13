@@ -63,3 +63,13 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 # Install devise
 gem 'devise'
+
+# Install jquery
+gem 'jquery-rails'
+
+gem 'popper_js', '~> 1.11.1'
+gem 'bootstrap'
+
+source 'https://rails-assets.org' do
+  gem 'rails-assets-tether', '>= 1.3.3'
+end
