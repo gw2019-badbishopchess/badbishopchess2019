@@ -61,5 +61,19 @@ end
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
+# Installs devise
+gem 'devise'
+
+# Installs jquery
+gem 'jquery-rails'
+
+# Installs front-end framework
+gem 'popper_js', '~> 1.11.1'
+gem 'bootstrap'
+
+source 'https://rails-assets.org' do
+  gem 'rails-assets-tether', '>= 1.3.3'
+end
+
+# Installs rubocop
 gem 'rubocop', '~> 0.74.0', require: false
-gem 'simple_form'
