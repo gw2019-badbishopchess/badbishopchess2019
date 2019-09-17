@@ -77,5 +77,11 @@ end
 
 # Installs rubocop
 gem 'rubocop', '~> 0.74.0', require: false
+# Installs simple form
 gem 'simple_form'
+# Installs Omniauth - base gem - allowing specific SM to be installed easier
+gem 'omniauth'
+# Installs Omniauth - facebook 
 gem 'omniauth-facebook'
+# Installs figaro to store tokens that won't be stored on github
+gem "figaro"
