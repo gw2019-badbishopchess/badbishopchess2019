@@ -85,3 +85,6 @@ gem 'omniauth'
 gem 'omniauth-facebook'
 # Installs figaro to store tokens that won't be stored on github
 gem "figaro"
+# Installs Omniauth - Twitter
+gem 'omniauth-twitter'
+gem 'omniauth-google-oauth2'

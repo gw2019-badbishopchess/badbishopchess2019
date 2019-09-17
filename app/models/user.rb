@@ -4,7 +4,7 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable,
          #:omniauthable, :omniauth_providers => [:facebook, :twitter] #this added the omni links in routes
-          :omniauthable, :omniauth_providers => [:facebook]
+          :omniauthable, :omniauth_providers => [:facebook, :twitter, :google_oauth2]
 
 #this was suggested by tutorials Wilson suggested so users can log in with social media
 #makes the pair (provider :socialmedia, uid: your_uid) match and creates them if they aren't in db
