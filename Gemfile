@@ -77,3 +77,5 @@ end
 
 # Installs rubocop
 gem 'rubocop', '~> 0.74.0', require: false
+gem 'simple_form'
+gem 'omniauth-facebook'

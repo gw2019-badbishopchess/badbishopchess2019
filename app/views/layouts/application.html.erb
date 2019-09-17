@@ -10,6 +10,35 @@
   </head>
 
   <body>
+    <div id="flex-content-container">
+      <nav class="navbar navbar-expand-md navbar-light bg-faded ">
+        <%= link_to "Bad Bishop", root_path, class: "navbar"%>       
+
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbartoggler" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+        <div class="collapse navbar-collapse" id="navbartoggler">
+          <ul class="navbar-nav my-2 my-lg-0">
+            <li class="nav-item ml-2">
+              <%= link_to "Sign Out", destroy_user_session_path, method: :delete, class: "nav-link"%>
+            </li>
+            <li class="nav-item ml-2">
+              <%= link_to "Sign In", new_user_session_path, class: "nav-link"%>
+            </li> 
+            <li class="nav-item">
+              <%= link_to "Sign Up", new_user_registration_path, class: "nav-link"%>
+            </li> 
+          </ul>
+        </div>
+      </nav>
+      <% if alert.present? %>
+        <p class="alert alert-danger alert-dismissible fade show" role="alert">
+          <%= alert %>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+        </p>
+      <% end %>
     <%= yield %>
   </body>
 </html>
