@@ -10,14 +10,41 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_09_16_195942) do
+ActiveRecord::Schema.define(version: 2019_09_18_021830) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "games", force: :cascade do |t|
+    t.string "name"
+    t.integer "game_id"
+    t.integer "game_turn"
+    t.integer "user_turn"
+    t.integer "white_player_id"
+    t.integer "black_player_id"
+    t.integer "winning_user_id"
+    t.integer "state"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["black_player_id"], name: "index_games_on_black_player_id"
+    t.index ["id"], name: "index_games_on_id"
+    t.index ["white_player_id"], name: "index_games_on_white_player_id"
+  end
+
+  create_table "pieces", force: :cascade do |t|
+    t.integer "piece_id"
+    t.integer "game_id"
+    t.integer "player_id"
+    t.integer "x_coordinate"
+    t.integer "y_coordinate"
+    t.integer "piece_move_count"
+    t.string "piece_type"
+    t.boolean "color_white"
+    t.boolean "piece_captured", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["piece_id"], name: "index_pieces_on_piece_id"
+    t.index ["player_id"], name: "index_pieces_on_player_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -28,12 +55,8 @@ ActiveRecord::Schema.define(version: 2019_09_16_195942) do
     t.datetime "remember_created_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "provider"
-    t.string "uid"
     t.index ["email"], name: "index_users_on_email", unique: true
-    t.index ["provider"], name: "index_users_on_provider"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
-    t.index ["uid"], name: "index_users_on_uid"
   end
 
 end
