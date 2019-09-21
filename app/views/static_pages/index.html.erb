@@ -1,28 +1,30 @@
+<head>
+  <link src="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
 
+</head>
 <body>
-  <%= link_to 'New Game', new_game_path %>
+
   <br/>
   <br/>
   <br/>
-  <div>
-    <% if @game.present? %>
-      <%= @game.name %>
-    <% end %>
+  <div class="badBishopMain">
+    <div class="row">
+      <div class="column-left">
+        <span class="fas fa-chess-bishop fa-10x"></span>
+      </div>
+      <div class="column-right">
+        <h1> Bad Bishop </h1>
+      </div>
+    </div>
+    <br/>
+    <br/>
+    <div class="subtitle">
+      <h1> chess for the adventurous</h1>
+    </div>
   </div>
   <br/>
   <br/>
 
-  <div class="chessboard col-6">
-    <table>
-      <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-      <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-      <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-      <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-      <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-      <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-      <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-      <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-    </table>
-  </div>
+
 
 </body>

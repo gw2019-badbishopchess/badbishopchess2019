@@ -6,8 +6,10 @@ class GamesController < ApplicationController
   end
 
   def create
-    @game = Game.create(game_params)
-    redirect_to game_path(@game)
+    @game = Game.new(game_params)
+
+    @game.save
+    redirect_to game_path
   end
 
   def show
@@ -15,7 +17,7 @@ class GamesController < ApplicationController
   end
 
   def index
-    @game = Game.all
+    @games = Game.all
   end
 
   def update
