@@ -1,1 +1,28 @@
-<h1 class="badbishoph1">Bad Bishop</h1>
+
+<body>
+  <%= link_to 'New Game', new_game_path %>
+  <br/>
+  <br/>
+  <br/>
+  <div>
+    <% if @game.present? %>
+      <%= @game.name %>
+    <% end %>
+  </div>
+  <br/>
+  <br/>
+
+  <div class="chessboard col-6">
+    <table>
+      <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+    </table>
+  </div>
+
+</body>
