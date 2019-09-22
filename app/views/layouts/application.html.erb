@@ -27,6 +27,16 @@
           <li class="nav-link">
             <%= link_to "Sign Out", destroy_user_session_path, class: "nav-link" %> 
           </li>
+          <li class="nav-link">
+            <%= link_to "Open Games", games_path, class: "nav-link" %>
+          </li>
+          <li class="nav-link">
+            <%= link_to "New Game", new_game_path, class: "nav-link" %>
+          </li>
+        </ul>
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong">
+            Launch New Game Modal
+          </button>
         <% else %>
           <li class="nav-item">
             <!-- <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a> -->
@@ -37,13 +47,6 @@
             <%= link_to "Sign Up", new_user_registration_path, class: "nav-link" %>
           </li>
         <% end %>
-          <li class="nav-link">
-            <%= link_to "New Game", new_game_path, class: "nav-link" %>
-          </li>
-        </ul>
-          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong">
-            Launch New Game Modal
-          </button>
       </div>
     </nav> 
 
@@ -57,16 +60,19 @@
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
-          <%= simple_form_for (Game.new), url: games_path do |f| %>
-            <div class="modal-body">
-                <%= f.input :name %>
-                <%= f.hidden_field 'user_id', value: current_user.id %>
-                <%= f.hidden_field 'white_player_id', value: current_user.id %>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <%= f.submit 'Start Game', class: 'btn btn-primary' %>
-            </div>
+          <% if current_user.present? %>
+            <%= simple_form_for (Game.new), url: games_path do |f| %>
+              <div class="modal-body">
+                  <%= f.input :name %>
+                  <%= f.hidden_field 'user_id', value: current_user.id %>
+                  <%= f.hidden_field 'white_player_id', value: current_user.id %>
+                  <%= f.hidden_field 'state', value: 'open' %>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  <%= f.submit 'Start Game', class: 'btn btn-primary' %>
+              </div>
+            <% end %>
           <% end %>
         </div>
       </div>

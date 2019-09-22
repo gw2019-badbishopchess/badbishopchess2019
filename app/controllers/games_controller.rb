@@ -1,5 +1,5 @@
 class GamesController < ApplicationController
-  before_action :authenticate_user!
+  #before_action :authenticate_user!
 
   def new
     @game = Game.new
@@ -15,9 +15,9 @@ class GamesController < ApplicationController
   end
 
   def index
-    @unmatched_games = Game.where(:black_player_id => nil).where.not(:white_player_id => nil)
+    @unmatched_games = Game.where(:state => "open")
   end
-  
+
   def update
     @game = Game.find(params[:id])
     @game.update_attributes(game_params)
