@@ -11,7 +11,6 @@
       @import url('https://fonts.googleapis.com/css?family=Noto+Sans|Open+Sans&display=swap');
     </style>
     <script src="https://kit.fontawesome.com/50718e42df.js" crossorigin="anonymous"></script>
-
   </head>
 
   <body>
@@ -46,10 +45,7 @@
             Launch New Game Modal
           </button>
       </div>
-    </nav>
-
-    <!-- Button trigger modal -->
- 
+    </nav> 
 
     <!-- Modal -->
     <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
@@ -65,6 +61,7 @@
             <div class="modal-body">
                 <%= f.input :name %>
                 <%= f.hidden_field 'user_id', value: current_user.id %>
+                <%= f.hidden_field 'white_player_id', value: current_user.id %>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

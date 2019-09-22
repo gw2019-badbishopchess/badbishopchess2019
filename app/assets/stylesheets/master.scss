@@ -52,7 +52,6 @@ body {
   background: #e5e5e5; /* fallback for old browsers */
   background: -webkit-linear-gradient(to right, #eef2f3, #e5e5e5);  /* Chrome 10-25, Safari 5.1-6 */
   background: linear-gradient(to right, #eef2f3, #e5e5e5); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-
 }
 
 table {
@@ -74,3 +73,29 @@ tr:nth-child(odd) td:nth-child(even), tr:nth-child(even) td:nth-child(odd) {
   border-color: #feda6a;
 }
 
+.GameHeader {
+  text-align: center;
+  font-family: 'Noto Sans', sans-serif;
+  font-size: 2.5rem;
+  margin-top: 7%;
+}
+
+.GameSubHeader:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.BlackPlayerName {
+  float: left;
+  width: 50%;
+  text-align: center;
+  font-size: 2rem;
+}
+
+.WhitePlayerName {
+  float: left;
+  width: 50%;
+  text-align: center;
+  font-size: 2rem;
+}

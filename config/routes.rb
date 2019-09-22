@@ -4,8 +4,15 @@ Rails.application.routes.draw do
   
   resources :users
   
-  resources :games #changed to this format since this is what the course taught
-  
+  resources :games do
+    member do
+      patch :join
+      put :join
+      patch :forfeit
+      put :forfeit
+    end
+  end
+    
 
   root 'static_pages#index' #added for homepage
 

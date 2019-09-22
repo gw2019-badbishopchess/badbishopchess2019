@@ -1,9 +1,22 @@
-<h1>Games#show</h1>
-<p>Find me in app/views/games/show.html.erb</p>
-
 <% if @game.present? %>
-  <%= @game.name %>
+  <div class="GameHeader">
+    <%= @game.name %>
+  </div>
+
+  <div class="GameSubHeader">
+    <div class="WhitePlayerName">
+      <%= @game.white_player_id %>
+    </div>
 <% end %>
+
+  <div class="BlackPlayerName">
+    <% if @game.black_player_id.present? %>
+      <%= @game.black_player_id %>
+    <% else %>
+      <p> Waiting for Player... </p>
+    <% end %>
+  </div>
+</div>
 
 <body>
   <br/>
