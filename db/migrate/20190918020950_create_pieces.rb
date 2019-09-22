@@ -1,7 +1,6 @@
 class CreatePieces < ActiveRecord::Migration[5.2]
   def change
-    create_table :pieces do |t|
-      t.integer :piece_id
+    create_table :piece do |t|
       t.integer :game_id
       t.integer :player_id
       t.integer :x_coordinate
@@ -12,8 +11,9 @@ class CreatePieces < ActiveRecord::Migration[5.2]
       t.boolean :piece_captured, default: false
       t.datetime :created_at, null: false
       t.datetime :updated_at, null: false
+      t.references :game
+      t.references :user
     end
-    add_index :pieces, :piece_id
-    add_index :pieces, :player_id
+    
   end
 end
