@@ -63,10 +63,10 @@
           <% if current_user.present? %>
             <%= simple_form_for (Game.new), url: games_path do |f| %>
               <div class="modal-body">
-                  <%= f.input :name %>
-                  <%= f.hidden_field 'user_id', value: current_user.id %>
-                  <%= f.hidden_field 'white_player_id', value: current_user.id %>
-                  <%= f.hidden_field 'state', value: 'open' %>
+                <%= f.input :name %>
+                <!-- f.input :username 'username', value 'username_text' %> -->
+                <%= f.hidden_field 'user_id', value: current_user.id %>
+                <%= f.hidden_field 'white_player_id', value: current_user.id %>
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
