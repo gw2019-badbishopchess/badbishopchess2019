@@ -1,2 +1,7 @@
-<h1>Games#new</h1>
-<p>Find me in app/views/games/new.html.erb</p>
+<div class="col-10 offset-2">
+  <h1> Let's Start a New Game! </h1>
+  <%= simple_form_for @game do |f| %>
+    <%= f.input :name %>
+    <%= f.submit 'Create Game', class: 'btn btn-primary' %>
+  <% end %>
+</div>

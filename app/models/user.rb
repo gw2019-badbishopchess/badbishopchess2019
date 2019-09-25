@@ -1,4 +1,7 @@
 class User < ApplicationRecord
+  has_many :pieces # Creating user to pieces association
+  has_many :games # Creating user to games association
+
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
