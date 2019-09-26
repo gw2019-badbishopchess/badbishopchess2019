@@ -31,6 +31,7 @@
         <tr id = <%= y_coord %>>
           <% (1..8).each do |x_coord| %>
             <td data-x-coord = <%= x_coord %> data-y-coord = <%= y_coord %> class = <%= "#{(y_coord % 2 == x_coord % 2 ? "white-square droppable-square" : "black-square droppable-square")}" %> >
+              <%= @game.render_piece(x_coord, y_coord) %>
             </td>
           <% end %>
         </tr>
