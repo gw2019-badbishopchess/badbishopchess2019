@@ -1,2 +1,42 @@
-<h1>Games#show</h1>
-<p>Find me in app/views/games/show.html.erb</p>
+<% if @game.present? %>
+  <div class="GameHeader">
+    <%= @game.name %>
+  </div>
+
+  <div class="GameSubHeader">
+    <div class="WhitePlayerName">
+      <%= @game.white_player_id %>
+    </div>
+<% end %>
+
+  <div class="BlackPlayerName">
+    <% if @game.black_player_id.present? %>
+      <%= @game.black_player_id %>
+    <% else %>
+      <p> Waiting for Player... </p>
+    <% end %>
+  </div>
+</div>
+
+<body>
+  <br/>
+  <br/>
+  <br/>
+  <br/>
+  <br/>
+<div class="chessboard col-6">
+  <table>
+    <tbody>
+      <% (1..8).each do |y_coord| %>
+        <tr id = <%= y_coord %>>
+          <% (1..8).each do |x_coord| %>
+            <td data-x-coord = <%= x_coord %> data-y-coord = <%= y_coord %> class = <%= "#{(y_coord % 2 == x_coord % 2 ? "white-square droppable-square" : "black-square droppable-square")}" %> >
+            </td>
+          <% end %>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+</body>
