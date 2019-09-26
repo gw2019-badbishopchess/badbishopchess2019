@@ -7,4 +7,8 @@ class Game < ApplicationRecord
   def render_piece(x_coord, y_coord)
     "x: #{x_coord} y: #{y_coord}"
   end
+
+  def populate_board!
+    "Pawn"
+  end
 end
