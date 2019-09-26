@@ -33,9 +33,7 @@
           <% (1..8).each do |x_coord| %>
             <td data-x-coord = <%= x_coord %> data-y-coord = <%= y_coord %> class = <%= "#{(y_coord % 2 == x_coord % 2 ? "white-square droppable-square" : "black-square droppable-square")}" %> >
               <% if @game.render_piece(x_coord, y_coord).present? %>
-              <% puts "GOODBYE-----------"%>
-              <%= @game.render_piece(x_coord, y_coord)[0].type %>
-      
+                <%= @game.render_piece(x_coord, y_coord)[0].type %>
               <% end %>
             </td>
           <% end %>

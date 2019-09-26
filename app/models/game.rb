@@ -7,9 +7,6 @@ class Game < ApplicationRecord
 
   def render_piece(x_coord, y_coord)
     piece = pieces.where("(x_coordinate = ? AND y_coordinate = ?)", x_coord, y_coord)
-    # if piece[0].type
-    #   puts piece[0].type
-    # end
   end
 
   def populate_board!
