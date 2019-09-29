@@ -32,7 +32,7 @@ ActiveRecord::Schema.define(version: 2019_09_15_173939) do
     t.index ["white_player_id"], name: "index_games_on_white_player_id"
   end
 
-  create_table "piece", force: :cascade do |t|
+  create_table "pieces", force: :cascade do |t|
     t.bigint "game_id"
     t.integer "player_id"
     t.integer "x_coordinate"
@@ -44,8 +44,9 @@ ActiveRecord::Schema.define(version: 2019_09_15_173939) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "user_id"
-    t.index ["game_id"], name: "index_piece_on_game_id"
-    t.index ["user_id"], name: "index_piece_on_user_id"
+    t.string "type"
+    t.index ["game_id"], name: "index_pieces_on_game_id"
+    t.index ["user_id"], name: "index_pieces_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
