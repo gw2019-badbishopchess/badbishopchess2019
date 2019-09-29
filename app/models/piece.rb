@@ -98,7 +98,42 @@ class Piece < ApplicationRecord
     end
   end
 
+  # checks if (x_end, y_end) are shared with other piece's coordinates
+  # 
+  def contains_own_piece?(x_end, y_end)
+    piece == game.pieces.where(:x_coordinate == x_end && :y_coordinate == y_end)
+    if piece.present? && ((piece.color_white == true && current_user.id == game.white_player_id) || (piece.color_white == false && current_user.id == game.black_player_id))
+      respond_to do |format|
+        format.json {render :json => { messasge: "Invalid Move!", class: "alert alert-warning"}. status: 422} 
+      end
+    else
+      remove_piece(piece)
+    end
+  end
+
+  def opp_piece?(x_end, y_end)
+  end
 
 
+  def remove_piece(dead)
+    dead.update_attributes(x_coordinate: nil, y_coordinate: nil, piece_captured: true)
+  end
+
+  def move_to!(new_x, new_y)
+    # Will we need to have a 'find_piece' method?
+    # piece = @piece.find(params[:id])
+
+    # Check Is_Obstructed? Method
+    is_obstructed_array = [new_x, new_y]
+    is_obstructed?(is_obstructed_array) == false
+
+    # Is_opponent_piece_present? Method
+
+    # Is_piece_present? Method
+    @piece.contains_own_piece?(piece_params[:x_coordinate].to_i, piece_params[:y_coordinate].to_i)
+    
+    # Run Update_attributes Method with new_x, new_y params
+    @piece.update_attributes(x_coordinate: new_x, y_coordinate: new_y)
+  end
 
 end
