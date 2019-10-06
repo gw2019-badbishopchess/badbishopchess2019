@@ -114,18 +114,21 @@ class Piece < ApplicationRecord
   end
 
   def move_to!(new_x, new_y)
-    # Will we need to have a 'find_piece' method?
-    # piece = @piece.find(params[:id])
-
-    # Check Is_Obstructed? Method
-    is_obstructed_array = [new_x, new_y]
-    if is_obstructed?(is_obstructed_array) == false
-      # Is_piece_present? Method
-      self.contains_own_piece?(piece_params[:x_coordinate].to_i, piece_params[:y_coordinate].to_i)
-      # Run Update_attributes Method with new_x, new_y params
-      @piece.update_attributes(x_coordinate: new_x, y_coordinate: new_y)
-    else
-      render plain: "Obstructed by Own Piece"
+    # 'find_piece' method is named 'occupied'
+    if occupied?(new_x, new_y) == true
+      # Adds X & Y coordinate to array
+      is_obstructed_array = [new_x, new_y]
+      # Check Is_Obstructed? Method with array
+      if is_obstructed?(is_obstructed_array) == false
+        # Is_piece_present? Method
+        self.contains_own_piece?(piece_params[:x_coordinate], piece_params[:y_coordinate])
+        # Run Update_attributes Method with new_x, new_y params
+        @piece.update_attributes(x_coordinate: new_x, y_coordinate: new_y)
+      else
+        render plain: "Obstructed by Own Piece"
+      end
+    else 
+      render plain: "No piece present"
     end
   end
 
