@@ -11,7 +11,12 @@ Rails.application.routes.draw do
       patch :forfeit
       put :forfeit
     end
+
   end
+  namespace :game do
+    resources :pieces, only:[:show, :update]
+  end
+
     
 
   root 'static_pages#index' #added for homepage

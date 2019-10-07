@@ -97,8 +97,4 @@ class Piece < ApplicationRecord
     else return false
     end
   end
-
-
-
-
 end

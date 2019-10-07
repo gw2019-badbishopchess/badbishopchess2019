@@ -12,7 +12,7 @@ class GamesController < ApplicationController
 
   def show
     @game = Game.find(params[:id])
-    @pieces = @game.pieces
+    @pieces = @game.pieces.find(params[:id])
   end
 
   def index
