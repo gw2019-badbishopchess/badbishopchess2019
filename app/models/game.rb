@@ -6,7 +6,7 @@ class Game < ApplicationRecord
   after_create :populate_board!
 
   def render_piece(x_coord, y_coord)
-    piece = pieces.where("(x_coordinate = ? AND y_coordinate = ?)", x_coord, y_coord)
+    pieces.where("(x_coordinate = ? AND y_coordinate = ?)", x_coord, y_coord)
   end
 
   def populate_board!

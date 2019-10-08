@@ -10,3 +10,4 @@ class Pawn < Piece
     (self.color_white == true && x_distance == 0 && new_y_coord == y_coordinate + 1) ||
     (self.color_white == false && x_distance == 0 && new_y_coord == y_coordinate - 1)
   end
+end
