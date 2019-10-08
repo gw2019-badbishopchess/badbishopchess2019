@@ -98,6 +98,19 @@ class Piece < ApplicationRecord
     end
   end
 
+  #this will see if the move from the piece is diagonal? will return true if it diagonal
+  def diagonal_move?(x, y)
+    return true if (x_coordinate - x).abs == (y_coordinate - y).abs && (x_coordinate != x)
+  end
+
+  #this figures out the distane of the x axis
+  def x_distance(new_x_coord)
+    x_distance = (new_x_coord - x_coordinate).abs
+  end
+
+  #this figures out the distane of the y axis
+  def y_distance(new_y_coord)
+    y_distance = (new_y_coord - y_coordinate).abs
   # checks if (x_end, y_end) are shared with other piece's coordinates
   
   def contains_own_piece?(x_end, y_end)
