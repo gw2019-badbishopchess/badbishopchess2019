@@ -25,17 +25,19 @@
     <div class="chessboard col-6">
         <table>
             <tbody>
-                <% (1..8).each do |y_coord| %>
-                <tr id=<%=y_coord %>>
-                    <% (1..8).each do |x_coord| %>
-                    <td data-x-coord=<%=x_coord %> data-y-coord =
-                        <%= y_coord %> class = "droppable"
-                        <%= "#{(y_coord % 2 == x_coord % 2 ? "white-square droppable-square" : "black-square droppable-square")}" %> >
-                        <% board_piece = @pieces.where("(x_coordinate = ? AND y_coordinate = ?)", x_coord, y_coord).first %>
+                <% (1..8).each do |y| %>
+                <tr id=<%=y %>>
+                    <% (1..8).each do |x| %>
+                    <td data-x-coord=<%=x %> data-y-coord =
+                        <%= y %> class = "droppable"
+                        <%= "#{(y % 2 == x % 2 ? "white-square droppable-square" : "black-square droppable-square")}" %> >
+                        <% board_piece = @pieces.where("(x_coordinate = ? AND y_coordinate = ?)", x, y).first %>
                         <% if board_piece.present? %>
-                        <div class="piece" data-piece-id="<%=board_piece.id%>" data-x-coord=<%=x_coord %> data-y-coord =
-                            <%= y_coord %>>
-                            <%= board_piece.unicode_symbol.html_safe %>
+                        <div class="piece" data-id="<%=board_piece.id%>" data-x_coord=<%=x %> data-y_coord =
+                            <%= y %>>
+                            <div class="piece-size text-center">
+                                <%= board_piece.unicode_symbol.html_safe %>
+                            </div>
                         </div>
                         <% end %>
                     </td>
@@ -52,15 +54,15 @@ $(document).ready(function() {
         snap: '.droppable',
         revert: 'invalid'
     });
+
     $('.droppable').droppable({
         drop: function(event, ui) {
             var piece = ui.draggable
             var destination_square = $(this);
             var update_piece = {
-                id: piece.data('piece-id'),
+                id: piece.data('id'),
                 x_coordinate: destination_square.data('x-coord'),
                 y_coordinate: destination_square.data('y-coord'),
-
             }
 
             $.ajax({
@@ -68,14 +70,12 @@ $(document).ready(function() {
                 url: '/pieces/' + update_piece.id,
                 beforeSend: function(xhr) { xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content')) },
                 dataType: 'json',
-                data: { piece_id: update_piece.id, x_coordinate: update_piece.x_coord, y_coordinate: update_piece.y_coord },
+                data: { id: update_piece.id, x_coordinate: update_piece.x_coordinate, y_coordinate: update_piece.y_coordinate },
                 success: function(data) {
                     destination_square.empty();
                     location.reload(true);
                 }
-
             });
-
         }
     });
 });
