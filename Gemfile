@@ -65,6 +65,7 @@ gem 'devise'
 
 # Installs jquery
 gem 'jquery-rails'
+gem 'jquery-ui-rails'
 
 # Installs front-end framework
 gem 'popper_js', '~> 1.11.1'

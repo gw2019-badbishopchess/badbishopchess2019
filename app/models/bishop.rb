@@ -1,5 +1,7 @@
-class Bishop < Pieces
-  
+class Bishop < Piece
+  def unicode_symbol  
+    return y_coordinate > 5 ? "&#9815;" : "&#9821;"
+  end
   def is_valid?(x_desination, y_destination)
     piece_path = [x_destination, y_destination]  
     if is_obstructed(piece_path) == false
