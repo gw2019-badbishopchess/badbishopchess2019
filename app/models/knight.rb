@@ -1,6 +1,6 @@
 class Knight < Piece
   
-  def valid_move?(x_destination, y_destination) 
+  def is_valid?(x_destination, y_destination) 
     x_distance = x_distance(x_destination)
     y_distance = y_distance(y_destination)
 
