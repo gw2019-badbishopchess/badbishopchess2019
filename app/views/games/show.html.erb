@@ -33,6 +33,8 @@
             <% (1..8).each do |x_coord| %>
               <td data-x-coord= <%= x_coord %> data-y-coord= <%= y_coord %> class= <%= "#{(y_coord % 2 == x_coord % 2 ? "white-square droppable-square" : "black-square droppable-square")}" %> >
                 <% if boardpiece = @pieces.where("(x_coordinate = ? AND y_coordinate = ?)", x_coord, y_coord).first %>
+                  <% puts "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! #{boardpiece.type} X: #{boardpiece.x_coordinate} Y: #{boardpiece.y_coordinate} White? #{boardpiece.color_white} "  %>
+                  <% puts "class: #{boardpiece.color_white} title: #{boardpiece.type}" %> 
                   <span class="<%= boardpiece.color_white %>" title="<%= boardpiece.type %>">
                     <%= link_to boardpiece.type, piece_path(boardpiece) %>                          
                   </span>
