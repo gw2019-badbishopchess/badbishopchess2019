@@ -11,7 +11,7 @@ class GamesController < ApplicationController
   end
 
   def show
-    @game = Game.find(params[:id])
+    @game = Game.find_by_id(params[:id])
     @pieces = @game.pieces
   end
 
@@ -20,7 +20,7 @@ class GamesController < ApplicationController
   end
 
   def update
-    @game = Game.find(params[:id])
+    @game = Game.find_by_id(params[:id])
     @game.update_attributes(game_params)
   end
 
