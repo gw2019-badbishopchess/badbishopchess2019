@@ -66,4 +66,5 @@ class Game < ApplicationRecord
       Queen.create(game_id: id, x_coordinate: 4, y_coordinate: 8, color_white: false, user_id: black_player_id)
 
   end
+
 end
