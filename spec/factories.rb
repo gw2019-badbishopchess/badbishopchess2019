@@ -6,4 +6,12 @@ FactoryBot.define do
     password { "secretPas" }
     password_confirmation { "secretPas" }
   end
+
+  factory :game do
+    association :user
+  end
+
+  factory :piece do
+    association :game
+  end
 end

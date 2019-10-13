@@ -10,7 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< HEAD
 ActiveRecord::Schema.define(version: 2019_09_26_171518) do
+=======
+ActiveRecord::Schema.define(version: 2019_10_07_151112) do
+>>>>>>> 378fe3a14c761636dec547e67f37256c3cf65f8c
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -36,7 +40,6 @@ ActiveRecord::Schema.define(version: 2019_09_26_171518) do
     t.integer "x_coordinate"
     t.integer "y_coordinate"
     t.integer "piece_move_count"
-    t.string "piece_type"
     t.boolean "color_white"
     t.boolean "piece_captured", default: false
     t.datetime "created_at", null: false
