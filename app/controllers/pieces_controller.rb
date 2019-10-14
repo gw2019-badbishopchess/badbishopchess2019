@@ -11,8 +11,8 @@ class PiecesController < ApplicationController
   def update
     @piece = Piece.find(params[:id])
     # if @piece.valid_move?(x_coordinate, y_coordinate)
-    #   @piece.move_to!(x_coordinate, y_coordinate)
-    @piece.update_attributes(piece_params)
+    @piece.move_to!(piece_params)
+    #@piece.update_attributes(piece_params)
     # else
     #   alert[:error] = "Not Valid Move"
     # end
