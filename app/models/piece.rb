@@ -15,20 +15,12 @@ class Piece < ApplicationRecord
   # args = piece coordinates and destination coordinates
   # returns 'horizontal', 'vertical' or if slope, returns degree of slope
   def check_path(x1, y1, x2, y2)
-    puts "x1: #{x1.is_a? Integer}"
-    puts "x2: #{x2.is_a? Integer}"
-    puts "x2: #{x2.is_a? Integer}"
-    puts "y2: #{y2.is_a? Integer}"
     if y1 == y2 
-      puts 'horizontal'
       return 'horizontal'
     elsif x1 == x2
-      puts 'vertical'
       return 'vertical'
     else
-      puts "$$$$$$$$$$$$$$$$$$$#{(y2 - y1).to_f}"
       @slope = (y2 - y1).to_f / (x2 - x1).to_f
-      puts @slope
     end
   end
 
@@ -46,40 +38,40 @@ class Piece < ApplicationRecord
     y2 = destination[1].to_i
 
     path = check_path(x1, y1, x2, y2)
-    puts path
+
     # checks rightward horizontal if occupied
     if path == 'horizontal' && x1 < x2
       (x1 + 1).upto(x2 - 1) do |x|
         return true if occupied?(x, y1)
       end
     end
-    puts "past rightward horizontal"
+    
     # checks leftward horizontal if occupied
     if path == 'horizontal' && x1 > x2
       (x1 - 1).downto(x2 + 1) do |x|
         return true if occupied?(x, y1)
       end
     end
-    puts "past leftward horizontal"
+   
     # checks upward vertical if occupied
     if path == 'vertical' && y1 < y2 
       (y1 + 1).upto(y2 - 1) do |y|
         return true if occupied?(x1, y)
       end
     end
-    puts "past up vertical"
+    
     # checks if downard vertical is occupied
     if path == 'vertical' && y1 > y2
       (y1 - 1).downto(y2 + 1) do |y|
         return true if occupied?(x1, y)
       end
     end
-    puts "past down vertical"
+  
     # returns false if none of above is true
     if path == 'horizontal' || path == 'vertical'
       return false
     end
-
+    
     # checks if rightward slope is occupied
     if @slope.abs == 1.0 && x1 < x2
       (x1 + 1).upto(x2 - 1) do |x|
@@ -105,22 +97,25 @@ class Piece < ApplicationRecord
     else return false
     end
 
-    puts 'end of is obstructed method'
   end
 
   # checks if (x_end, y_end) are shared with other piece's coordinates
   
   def contains_own_piece?(x_end, y_end)
-    if piece = game.pieces.find_by(x_coordinate: x_end, y_coordinate: y_end)
-      if piece.color_white == true && self.user_id == game.white_player_id || piece.color_white == false && self.user_id == game.black_player_id
-        puts "Error: Obstructed by Own Piece!"
-        return 
-      else
-        remove_piece(piece)
-        return false
+    if game.pieces.find_by(x_coordinate: x_end, y_coordinate: y_end) != nil
+      piece = game.pieces.find_by(x_coordinate: x_end, y_coordinate: y_end)
+        puts "black player id: #{game.black_player_id}"
+        puts piece.type
+        if piece.color_white == true && self.user_id == game.white_player_id || piece.color_white == false && self.user_id == game.black_player_id
+          puts "Error: Obstructed by Own Piece!"
+          render plain: "Error: Obstructed by Own Piece"
+        else
+          remove_piece(piece)
+          return false
+        end
       end
-      return false
-    end
+    return false
+    
   end
 
   def remove_piece(dead)
@@ -128,13 +123,18 @@ class Piece < ApplicationRecord
   end
 
   def move_to!(piece_params)
-    if self.is_valid?(piece_params[:x_coordinate], piece_params[:y_coordinate]) &&
-    self.contains_own_piece?(piece_params[:x_coordinate], piece_params[:y_coordinate]) &&
-    (self.type == "King" && !self.in_check?(piece_params[:x_coordinate], piece_params[:y_coordinate]))
-    return self.update_attributes(x_coordinate: piece_params[:x_coordinate], y_coordinate: piece_params[:y_coordinate])
-    else 
+    puts self.type
+    puts "is valid in move_to method? #{self.is_valid?(piece_params[:x_coordinate], piece_params[:y_coordinate])}"
+    puts "contains own piece? #{self.contains_own_piece?(piece_params[:x_coordinate], piece_params[:y_coordinate])}"
+    if self.is_valid?(piece_params[:x_coordinate], piece_params[:y_coordinate]) == true && self.contains_own_piece?(piece_params[:x_coordinate], piece_params[:y_coordinate]) == false
+      self.update_attributes(x_coordinate: piece_params[:x_coordinate], y_coordinate: piece_params[:y_coordinate])
+      if self.check_to_king?
+        render plain: "Error: Check to the King!"
+      end
+    else
       return false
     end
+
   end
 
     #this will see if the move from the piece is diagonal? will return true if it diagonal
@@ -153,7 +153,21 @@ class Piece < ApplicationRecord
   end
 
   def image
-    color_white == true ? "White#{self.type}.png" : image = "Black#{self.type}.png"
+    color_white == true ? "White#{self.type}.png" : "Black#{self.type}.png"
+  end
+
+  def check_to_king?
+    white_king = game.pieces.find(color_white: true, type: "King")
+    black_king = game.pieces.find(color_white: false, type: "King")
+    game.pieces.each do | piece |
+      if piece.x_coordinate != nil && piece.is_valid?(white_king.x_coordinate, white_king.y_coordinate)
+        return true
+      elsif piece.x_coordinate != nil && piece.is_valid?(black_king.x_coordinate, black_king.y_coordinate)
+        return true
+      else
+        return false
+      end
+    end
   end
 
 end

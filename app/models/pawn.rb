@@ -7,11 +7,11 @@ class Pawn < Piece
   def is_valid?(new_x_coord, new_y_coord)
     if piece_move_count == nil && x_distance(new_x_coord) == 0 && y_distance(new_y_coord) <= 2
       return true
-    elsif diagonal_move?(new_x_coord, new_y_coord) && !occupied?(new_x_coord, new_y_coord)
+    elsif diagonal_move?(new_x_coord, new_y_coord) && occupied?(new_x_coord, new_y_coord)
       true
-    elsif color_white == true && x_distance == 0 && new_y_coord == self.y_coordinate + 1
+    elsif color_white == true && x_distance(new_x_coord) == 0 && new_y_coord == self.y_coordinate + 1
       return true
-    elsif color_white == false && x_distance == 0 && new_y_coord == self.y_coordinate - 1
+    elsif color_white == false && x_distance(new_x_coord) == 0 && new_y_coord == self.y_coordinate - 1
       return true
     else 
       return false
