@@ -4,18 +4,12 @@ class PiecesController < ApplicationController
     @piece = Piece.find_by_id(params[:id])
     @game = @piece.game
     @pieces = @game.pieces
-    flash[:success] = "#{@piece.type} X: #{@piece.x_coordinate} Y: #{@piece.y_coordinate}"
     redirect_to game_path(@game)
   end 
 
   def update
     @piece = Piece.find(params[:id])
-    # if @piece.valid_move?(x_coordinate, y_coordinate)
     @piece.move_to!(piece_params)
-    #@piece.update_attributes(piece_params)
-    # else
-    #   alert[:error] = "Not Valid Move"
-    # end
   end
 
   def create

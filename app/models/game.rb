@@ -56,7 +56,7 @@ class Game < ApplicationRecord
 
       #Bishops
       [3,6].each do |x_coord|
-        Rook.create(game_id: id, x_coordinate: x_coord, y_coordinate: 8, color_white: false, user_id: black_player_id)
+        Bishop.create(game_id: id, x_coordinate: x_coord, y_coordinate: 8, color_white: false, user_id: black_player_id)
       end
 
       #King

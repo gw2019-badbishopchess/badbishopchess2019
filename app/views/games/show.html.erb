@@ -22,7 +22,7 @@
               },
             },
             success: function() {
-              console.log($(ui.droppable));
+              console.log('this move was successful');
             },
             error: function() {
               console.log(`There was an error with your piece move.`)
@@ -72,7 +72,8 @@
                 <td data-x-coord= <%= x_coord %> data-y-coord= <%= y_coord %> class= <%= "#{(y_coord % 2 == x_coord % 2 ? "white-square droppable-square" : "black-square droppable-square")}" %> >
                   <% if boardpiece = @pieces.where("(x_coordinate = ? AND y_coordinate = ?)", x_coord, y_coord).first %>
                     <span class= '<%= boardpiece.type %> moveable', id='<%= boardpiece.id %>' data="<%=boardpiece.color_white%>, <%= boardpiece.user_id %>, <%= @game.black_player_id %>">
-                      <%= link_to boardpiece.type, piece_path(boardpiece) %>
+                      <%= image_tag boardpiece.image %>
+                      <%# <%= link_to boardpiece.type, piece_path(boardpiece) %> 
                     </span>
                   <% end %>
                 </td>
