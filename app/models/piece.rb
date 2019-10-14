@@ -29,7 +29,6 @@ class Piece < ApplicationRecord
   # returns True if one or more spaces are occupied, otherwise False
   # runtime error if not straight line
   def is_obstructed?(destination)
-    puts "in is_obstructed"
     @game = game
     
     x1 = self.x_coordinate.to_i
@@ -104,8 +103,6 @@ class Piece < ApplicationRecord
   def contains_own_piece?(x_end, y_end)
     if game.pieces.find_by(x_coordinate: x_end, y_coordinate: y_end) != nil
       piece = game.pieces.find_by(x_coordinate: x_end, y_coordinate: y_end)
-        puts "black player id: #{game.black_player_id}"
-        puts piece.type
         if piece.color_white == true && self.user_id == game.white_player_id || piece.color_white == false && self.user_id == game.black_player_id
           puts "Error: Obstructed by Own Piece!"
           render plain: "Error: Obstructed by Own Piece"
@@ -113,7 +110,7 @@ class Piece < ApplicationRecord
           remove_piece(piece)
           return false
         end
-      end
+    end
     return false
     
   end
@@ -123,6 +120,7 @@ class Piece < ApplicationRecord
   end
 
   def move_to!(piece_params)
+    puts "------------ Move To ------------------"
     puts self.type
     puts "is valid in move_to method? #{self.is_valid?(piece_params[:x_coordinate], piece_params[:y_coordinate])}"
     puts "contains own piece? #{self.contains_own_piece?(piece_params[:x_coordinate], piece_params[:y_coordinate])}"

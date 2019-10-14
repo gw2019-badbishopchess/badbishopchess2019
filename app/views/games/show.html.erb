@@ -62,6 +62,24 @@
   <br/>
   <br/>
 
+  <div class="castling">
+    <% queen_side = @pieces.where(type: "Rook", user_id: current_user.id, x_coordinate: 1).first %>
+    <% king_side = @pieces.where(type: "Rook", user_id: current_user.id, x_coordinate: 8).first %>
+    <% if !queen_side.nil? || !king_side.nil? %>
+      <h2>You can castle. </h2>
+      <h4>Here are your possible options</h4>
+      <% if !queen_side.nil? %>
+        <button>Your Queenside <%= queen_side.type %></button>
+      <% end %>
+      <br />
+      <% if !king_side.nil? %>
+        <button>Your Kingside <%= king_side.type %></button>
+      <% end %>
+    <% else %>
+      <h2>You can't castle yet!</h2>
+    <% end %>
+  </div>
+
   <div class="chessboard col-6">
     <table>
       <tbody>

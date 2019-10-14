@@ -21,6 +21,10 @@ class PiecesController < ApplicationController
     end
   end
 
+  def castling
+    @
+  end
+
   private
 
   def piece_params

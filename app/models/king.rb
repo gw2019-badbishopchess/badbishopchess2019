@@ -5,7 +5,7 @@ class King < Piece
       return false
     elsif (x_coordinate - x_destinantion.to_i).abs <= 1 && (y_coordinate - y_destination.to_i).abs <= 1
       return true
-    else  
+    else 
       return false
     end 
   end
@@ -22,6 +22,27 @@ class King < Piece
       end
     else  
       return false
+    end
+  end
+
+  def can_castle?(rook_x_coord, rook_y_coord)
+    return false unless self.piece_move_count == 0
+    return false unless x_distance(rook_x_coord) == 2 && y_distance(rook_x_coord) == 0
+    if new_x_destination > x_coordinate
+      castling_rook = self.game.pieces.where(type: "Rook", user_id: self.user.id, x_coordinate: 8).first
+    else
+      castling_rook = self.game.pieces.where(type: "Rook", user_id: self.user.id, x_coordinate: 1).first
+    end
+    return false if castling_rook.nil?
+    if castling_rook.nil? || castling_rook.piece_move_count > 0 || is_obstructed?([castling_rook.x_coordinate, castling_rook.y_coordinate])
+      return false
+    end
+    return true
+  end
+
+  def castle(rook_x_coord, rook_y_coord)
+    if can_castle?(rook_x_coord, rook_y_coord)
+      self.update()
     end
   end
           

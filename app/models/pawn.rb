@@ -5,7 +5,7 @@ class Pawn < Piece
   #line 12 to see if the move is 1 space forward if white piece
   #line 14 to see if the move is 1 space forward if black piece
   def is_valid?(new_x_coord, new_y_coord)
-    if piece_move_count == nil && x_distance(new_x_coord) == 0 && y_distance(new_y_coord) <= 2
+    if piece_move_count == 0 && x_distance(new_x_coord) == 0 && y_distance(new_y_coord) <= 2
       return true
     elsif diagonal_move?(new_x_coord, new_y_coord) && occupied?(new_x_coord, new_y_coord)
       true
