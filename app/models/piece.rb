@@ -118,7 +118,7 @@ class Piece < ApplicationRecord
   end
 
   def move_to!(piece_params)
-    self.is_valid?(piece_params[:x_coordinate], piece_params[:y_coordinate])
+    self.is_valid?(piece_params[:x_coordinate].to_i, piece_params[:y_coordinate].to_i)
     self.contains_own_piece?(piece_params[:x_coordinate], piece_params[:y_coordinate])
     self.update_attributes(x_coordinate: piece_params[:x_coordinate], y_coordinate: piece_params[:y_coordinate])
   end
@@ -130,12 +130,12 @@ class Piece < ApplicationRecord
 
   #this figures out the distane of the x axis
   def x_distance(new_x_coord)
-    (new_x_coord.to_i - x_coordinate).abs
+    (new_x_coord.to_i - self.x_coordinate).abs
   end
 
   #this figures out the distane of the y axis
   def y_distance(new_y_coord)
-    (new_y_coord.to_i - y_coordinate).abs
+    (new_y_coord.to_i - self.y_coordinate).abs
   end
 
 end
