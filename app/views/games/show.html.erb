@@ -2,9 +2,9 @@
 
   $(function() {
     $('.moveable').draggable({ 
-        snap: 'td',
+        // snap: 'td',
         cursor: 'move',
-        snapTolerance: 20,
+        // snapTolerance: 20,
         containment: 'document'
       });
     $('td').droppable({
@@ -25,6 +25,7 @@
               console.log('this move was successful');
             },
             error: function() {
+              alert(`There was an error with your piece move.`);
               console.log(`There was an error with your piece move.`)
             }
           });

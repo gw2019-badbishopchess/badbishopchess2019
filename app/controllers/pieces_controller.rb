@@ -10,7 +10,9 @@ class PiecesController < ApplicationController
 
   def update
     @piece = Piece.find(params[:id])
+    @game = @piece.game
     @piece.move_to!(piece_params)
+    redirect_to game_path(@game)
   end
 
   def create
@@ -27,6 +29,7 @@ class PiecesController < ApplicationController
     @game = @rook.game
     @king = @game.pieces.where(type: 'King', user_id: current_user.id).first
     @king.castle(castling_x_coord)
+    redirect_to game_path(@game)
   end
 
   private

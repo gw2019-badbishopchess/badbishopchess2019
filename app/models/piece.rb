@@ -119,17 +119,18 @@ class Piece < ApplicationRecord
   end
 
   def move_to!(piece_params)
-    # puts "------------ Move To ------------------"
-    # puts self.type
-    # puts "is valid in move_to method? #{self.is_valid?(piece_params[:x_coordinate], piece_params[:y_coordinate])}"
-    # puts "contains own piece? #{self.contains_own_piece?(piece_params[:x_coordinate], piece_params[:y_coordinate])}"
     if self.type == 'King' && self.can_castle?(piece_params[:x_coordinate])
       self.castle(piece_params[:x_coordinate])
       return
     end
-    return false unless self.is_valid?(piece_params[:x_coordinate], piece_params[:y_coordinate]) == true && self.contains_own_piece?(piece_params[:x_coordinate], piece_params[:y_coordinate]) == false
-    self.update_attributes(x_coordinate: piece_params[:x_coordinate], y_coordinate: piece_params[:y_coordinate])
-    render plain: "Error: Check to the King!" if self.check_to_king?
+    if self.is_valid?(piece_params[:x_coordinate], piece_params[:y_coordinate]) == true && self.contains_own_piece?(piece_params[:x_coordinate], piece_params[:y_coordinate]) == false
+      self.update_attributes(x_coordinate: piece_params[:x_coordinate], y_coordinate: piece_params[:y_coordinate])
+    else
+      flash[:alert] = "This is not a valid move"
+    end
+    if self.check_to_king?
+      flash[:alert] = "Error: Check to the King!" 
+    end
   end
 
     #this will see if the move from the piece is diagonal? will return true if it diagonal
@@ -151,9 +152,10 @@ class Piece < ApplicationRecord
     color_white == true ? "White#{self.type}.png" : "Black#{self.type}.png"
   end
 
+  #this checks to see when a piece is moved if a king is in check returns t/f
   def check_to_king?
-    white_king = game.pieces.find(color_white: true, type: "King")
-    black_king = game.pieces.find(color_white: false, type: "King")
+    white_king = game.pieces.where(color_white: true, type: "King").first
+    black_king = game.pieces.where(color_white: false, type: "King").first
     game.pieces.each do | piece |
       if piece.x_coordinate != nil && piece.is_valid?(white_king.x_coordinate, white_king.y_coordinate)
         return true
