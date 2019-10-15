@@ -112,7 +112,6 @@ class Piece < ApplicationRecord
         end
     end
     return false
-    
   end
 
   def remove_piece(dead)
@@ -120,17 +119,16 @@ class Piece < ApplicationRecord
   end
 
   def move_to!(piece_params)
-    puts "------------ Move To ------------------"
-    puts self.type
-    puts "is valid in move_to method? #{self.is_valid?(piece_params[:x_coordinate], piece_params[:y_coordinate])}"
-    puts "contains own piece? #{self.contains_own_piece?(piece_params[:x_coordinate], piece_params[:y_coordinate])}"
-
-    return false unless self.is_valid?(piece_params[:x_coordinate], piece_params[:y_coordinate]) == true && self.contains_own_piece?(piece_params[:x_coordinate], piece_params[:y_coordinate]) == false
+    # puts "------------ Move To ------------------"
+    # puts self.type
+    # puts "is valid in move_to method? #{self.is_valid?(piece_params[:x_coordinate], piece_params[:y_coordinate])}"
+    # puts "contains own piece? #{self.contains_own_piece?(piece_params[:x_coordinate], piece_params[:y_coordinate])}"
     if self.type == 'King' && self.can_castle?(piece_params[:x_coordinate])
       self.castle(piece_params[:x_coordinate])
-    else
-      self.update_attributes(x_coordinate: piece_params[:x_coordinate], y_coordinate: piece_params[:y_coordinate])
+      return
     end
+    return false unless self.is_valid?(piece_params[:x_coordinate], piece_params[:y_coordinate]) == true && self.contains_own_piece?(piece_params[:x_coordinate], piece_params[:y_coordinate]) == false
+    self.update_attributes(x_coordinate: piece_params[:x_coordinate], y_coordinate: piece_params[:y_coordinate])
     render plain: "Error: Check to the King!" if self.check_to_king?
   end
 

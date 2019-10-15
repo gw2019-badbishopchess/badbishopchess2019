@@ -2,6 +2,7 @@ class King < Piece
 
   def is_valid?(x_destinantion, y_destination)
     return false if self.in_check?(x_destinantion, y_destination)
+    
     return true if (x_coordinate - x_destinantion.to_i).abs <= 1 && (y_coordinate - y_destination.to_i).abs <= 1
     return false
   end
