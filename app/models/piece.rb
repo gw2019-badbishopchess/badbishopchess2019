@@ -124,15 +124,14 @@ class Piece < ApplicationRecord
     puts self.type
     puts "is valid in move_to method? #{self.is_valid?(piece_params[:x_coordinate], piece_params[:y_coordinate])}"
     puts "contains own piece? #{self.contains_own_piece?(piece_params[:x_coordinate], piece_params[:y_coordinate])}"
-    if self.is_valid?(piece_params[:x_coordinate], piece_params[:y_coordinate]) == true && self.contains_own_piece?(piece_params[:x_coordinate], piece_params[:y_coordinate]) == false
-      self.update_attributes(x_coordinate: piece_params[:x_coordinate], y_coordinate: piece_params[:y_coordinate])
-      if self.check_to_king?
-        render plain: "Error: Check to the King!"
-      end
-    else
-      return false
-    end
 
+    return false unless self.is_valid?(piece_params[:x_coordinate], piece_params[:y_coordinate]) == true && self.contains_own_piece?(piece_params[:x_coordinate], piece_params[:y_coordinate]) == false
+    if self.type == 'King' && self.can_castle?(piece_params[:x_coordinate])
+      self.castle(piece_params[:x_coordinate])
+    else
+      self.update_attributes(x_coordinate: piece_params[:x_coordinate], y_coordinate: piece_params[:y_coordinate])
+    end
+    render plain: "Error: Check to the King!" if self.check_to_king?
   end
 
     #this will see if the move from the piece is diagonal? will return true if it diagonal

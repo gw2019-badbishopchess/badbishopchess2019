@@ -1,11 +1,12 @@
 class PiecesController < ApplicationController
+  before_action :authenticate_user!
   
   def show
     @piece = Piece.find_by_id(params[:id])
     @game = @piece.game
     @pieces = @game.pieces
     redirect_to game_path(@game)
-  end 
+  end
 
   def update
     @piece = Piece.find(params[:id])
@@ -22,16 +23,19 @@ class PiecesController < ApplicationController
   end
 
   def castling
-    @king = current_user.pieces.where(type: "King").first
-    @rook_for_castling = Piece.find(params[:id])
-    @game = @rook_for_castling.game
-    @rook_for_castling.castle(piece_params)
+    @rook = Piece.find(params[:id])
+    @game = @rook.game
+    @king = @game.pieces.where(type: 'King', user_id: current_user.id).first
+    @king.castle(castling_x_coord)
   end
 
   private
 
+  def castling_x_coord
+    params[:x_coordinate] == 1 ? 3 : 7
+  end
+
   def piece_params
     params.require(:piece).permit(:x_coordinate, :y_coordinate, :captured, :user_id, :game_id, :white_player_id, :black_player_id, :type, :game)
   end
-
 end
