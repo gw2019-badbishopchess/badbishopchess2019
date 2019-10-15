@@ -13,10 +13,11 @@ class GamesController < ApplicationController
   def show
     @game = Game.find_by_id(params[:id])
     @pieces = @game.pieces
+    @king = current_user.pieces.where(type: 'King').first
   end
 
   def index
-    @unmatched_games = Game.where(:state => "open")
+    @unmatched_games = Game.where(:state => 'open')
   end
 
   def update

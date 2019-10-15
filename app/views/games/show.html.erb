@@ -2,9 +2,9 @@
 
   $(function() {
     $('.moveable').draggable({ 
-        snap: 'td',
+        // snap: 'td',
         cursor: 'move',
-        snapTolerance: 20,
+        // snapTolerance: 20,
         containment: 'document'
       });
     $('td').droppable({
@@ -22,9 +22,10 @@
               },
             },
             success: function() {
-              console.log(`this was successful, your piece moved`);
+              console.log('this move was successful');
             },
             error: function() {
+              alert(`There was an error with your piece move.`);
               console.log(`There was an error with your piece move.`)
             }
           });
@@ -61,6 +62,18 @@
   <br/>
   <br/>
   <br/>
+  <div class="castling">
+    <% if (!queenside_rook.nil? || !kingside_rook.nil?) && legal_to_castle?  %>
+      <h2>You can castle! </h2>
+      <% if !queenside_rook.nil? %>
+        <%= link_to 'Your Queenside Rook', castling_piece_path(queenside_rook), class: 'btn btn-info btn-sm', method: :put %>
+      <% end %>
+      <br />
+      <% if !queenside_rook.nil? %>
+        <%= link_to 'Your Kingside Rook', castling_piece_path(kingside_rook), class: 'btn btn-info btn-sm', method: :put %>
+      <% end %>
+    <% end %>
+  </div> 
 
   <div class="chessboard col-6">
     <table>
@@ -71,8 +84,9 @@
               <% (1..8).each do |x_coord| %>
                 <td data-x-coord= <%= x_coord %> data-y-coord= <%= y_coord %> class= <%= "#{(y_coord % 2 == x_coord % 2 ? "white-square droppable-square" : "black-square droppable-square")}" %> >
                   <% if boardpiece = @pieces.where("(x_coordinate = ? AND y_coordinate = ?)", x_coord, y_coord).first %>
-                    <span class= '<%= boardpiece.type %> moveable', id= '<%= boardpiece.id %>'  >
-                      <%= link_to boardpiece.type, piece_path(boardpiece) %>
+                    <span class= '<%= boardpiece.type %> moveable', id='<%= boardpiece.id %>' data="<%=boardpiece.color_white%>, <%= boardpiece.user_id %>, <%= @game.black_player_id %>">
+                      <%= image_tag boardpiece.image %>
+                      <%# <%= link_to boardpiece.type, piece_path(boardpiece) %> 
                     </span>
                   <% end %>
                 </td>

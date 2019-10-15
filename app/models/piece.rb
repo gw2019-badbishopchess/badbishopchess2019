@@ -30,12 +30,11 @@ class Piece < ApplicationRecord
   # runtime error if not straight line
   def is_obstructed?(destination)
     @game = game
-
-    x1 = self.x_coordinate
-    y1 = self.y_coordinate
-    x2 = destination[0]
-    y2 = destination[1]
-
+    
+    x1 = self.x_coordinate.to_i
+    y1 = self.y_coordinate.to_i
+    x2 = destination[0].to_i
+    y2 = destination[1].to_i
 
     path = check_path(x1, y1, x2, y2)
 
@@ -45,33 +44,33 @@ class Piece < ApplicationRecord
         return true if occupied?(x, y1)
       end
     end
-
+    
     # checks leftward horizontal if occupied
     if path == 'horizontal' && x1 > x2
       (x1 - 1).downto(x2 + 1) do |x|
         return true if occupied?(x, y1)
       end
     end
-
+   
     # checks upward vertical if occupied
     if path == 'vertical' && y1 < y2 
       (y1 + 1).upto(y2 - 1) do |y|
         return true if occupied?(x1, y)
       end
     end
-
+    
     # checks if downard vertical is occupied
     if path == 'vertical' && y1 > y2
       (y1 - 1).downto(y2 + 1) do |y|
         return true if occupied?(x1, y)
       end
     end
-
+  
     # returns false if none of above is true
     if path == 'horizontal' || path == 'vertical'
       return false
     end
-
+    
     # checks if rightward slope is occupied
     if @slope.abs == 1.0 && x1 < x2
       (x1 + 1).upto(x2 - 1) do |x|
@@ -96,55 +95,76 @@ class Piece < ApplicationRecord
       fail 'path is not a straight line'
     else return false
     end
+
   end
 
   # checks if (x_end, y_end) are shared with other piece's coordinates
   
   def contains_own_piece?(x_end, y_end)
-    piece = game.pieces.where(:x_coordinate == x_end && :y_coordinate == y_end)
-    if piece.present? && ((piece.color_white == true && current_user.id == game.white_player_id) || (piece.color_white == false && current_user.id == game.black_player_id))
-      render js: "alert('Error: Obstructed by Own Piece');"
-    else
-      remove_piece(piece)
+    if game.pieces.find_by(x_coordinate: x_end, y_coordinate: y_end) != nil
+      piece = game.pieces.find_by(x_coordinate: x_end, y_coordinate: y_end)
+        if piece.color_white == true && self.user_id == game.white_player_id || piece.color_white == false && self.user_id == game.black_player_id
+          puts "Error: Obstructed by Own Piece!"
+          render plain: "Error: Obstructed by Own Piece"
+        else
+          remove_piece(piece)
+          return false
+        end
     end
+    return false
   end
 
   def remove_piece(dead)
     dead.update_attributes(x_coordinate: nil, y_coordinate: nil, piece_captured: true)
   end
 
-  def move_to!(new_x, new_y)
-    # 'find_piece' method is named 'occupied'
-    if occupied?(new_x, new_y) == true
-      # Adds X & Y coordinate to array
-      is_obstructed_array = [new_x, new_y]
-      # Check Is_Obstructed? Method with array
-      if is_obstructed?(is_obstructed_array) == false
-        # Is_piece_present? Method
-        self.contains_own_piece?(piece_params[:x_coordinate], piece_params[:y_coordinate])
-        # Run Update_attributes Method with new_x, new_y params
-        @piece.update_attributes(x_coordinate: new_x, y_coordinate: new_y)
-      else
-        render plain: "Obstructed by Own Piece"
-      end
-    else 
-      render plain: "No piece present"
+  def move_to!(piece_params)
+    if self.type == 'King' && self.can_castle?(piece_params[:x_coordinate])
+      self.castle(piece_params[:x_coordinate])
+      return
+    end
+    if self.is_valid?(piece_params[:x_coordinate], piece_params[:y_coordinate]) == true && self.contains_own_piece?(piece_params[:x_coordinate], piece_params[:y_coordinate]) == false
+      self.update_attributes(x_coordinate: piece_params[:x_coordinate], y_coordinate: piece_params[:y_coordinate])
+    else
+      flash[:alert] = "This is not a valid move"
+    end
+    if self.check_to_king?
+      flash[:alert] = "Error: Check to the King!" 
     end
   end
 
     #this will see if the move from the piece is diagonal? will return true if it diagonal
   def diagonal_move?(x, y)
-    return true if (x_coordinate - x).abs == (y_coordinate - y).abs && (x_coordinate != x)
+    return true if (x_coordinate - x.to_i).abs == (y_coordinate - y.to_i).abs && (x_coordinate != x.to_i)
   end
 
   #this figures out the distane of the x axis
   def x_distance(new_x_coord)
-    (new_x_coord - x_coordinate).abs
+    (new_x_coord.to_i - x_coordinate).abs
   end
 
   #this figures out the distane of the y axis
   def y_distance(new_y_coord)
-    (new_y_coord - y_coordinate).abs
+    (new_y_coord.to_i - y_coordinate).abs
+  end
+
+  def image
+    color_white == true ? "White#{self.type}.png" : "Black#{self.type}.png"
+  end
+
+  #this checks to see when a piece is moved if a king is in check returns t/f
+  def check_to_king?
+    white_king = game.pieces.where(color_white: true, type: "King").first
+    black_king = game.pieces.where(color_white: false, type: "King").first
+    game.pieces.each do | piece |
+      if piece.x_coordinate != nil && piece.is_valid?(white_king.x_coordinate, white_king.y_coordinate)
+        return true
+      elsif piece.x_coordinate != nil && piece.is_valid?(black_king.x_coordinate, black_king.y_coordinate)
+        return true
+      else
+        return false
+      end
+    end
   end
 
 end

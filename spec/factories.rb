@@ -9,9 +9,13 @@ FactoryBot.define do
 
   factory :game do
     association :user
+
   end
 
   factory :piece do
     association :game
+  end
+
+  factory :king do 
   end
 end
