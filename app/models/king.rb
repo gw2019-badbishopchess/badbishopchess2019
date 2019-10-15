@@ -17,7 +17,6 @@ class King < Piece
       opponenet_pieces.each do | piece |
         if piece.user_id != self.user_id && piece.x_coordinate != nil && piece.is_valid?(x_cord_dest, y_cord_dest)
           return true
-          break
         end
       end
     else  
@@ -25,10 +24,10 @@ class King < Piece
     end
   end
 
-  def can_castle?(rook_x_coord, rook_y_coord)
+  def can_castle?(new_x_coord, new_y_coord)
     return false unless self.piece_move_count == 0
-    return false unless x_distance(rook_x_coord) == 2 && y_distance(rook_x_coord) == 0
-    if new_x_destination > x_coordinate
+    return false unless x_distance(new_x_coord) == 2 && y_distance(new_x_coord) == 0
+    if new_x_coord > x_coordinate
       castling_rook = self.game.pieces.where(type: "Rook", user_id: self.user.id, x_coordinate: 8).first
     else
       castling_rook = self.game.pieces.where(type: "Rook", user_id: self.user.id, x_coordinate: 1).first
@@ -40,10 +39,16 @@ class King < Piece
     return true
   end
 
-  def castle(rook_x_coord, rook_y_coord)
-    if can_castle?(rook_x_coord, rook_y_coord)
-      self.update()
+  def castle(new_x_coord, new_y_coord)
+    if can_castle?(new_x_coord, new_y_coord)
+      @king.update_attributes(x_coordinate: new_x_coord, y_coordinate: new_y_coord, piece_move_count: 1)
+      if new_x_coord == 3
+        @rook_for_castling.update_attributes(x_coordinate: 4, piece_move_count: 1)
+      else new_x_coord == 7
+        @rook_for_castling.update_attributes(x_coordinate: 6, piece_move_count: 1)
+      end
     end
+  end
   end
           
 end

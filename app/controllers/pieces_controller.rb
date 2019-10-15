@@ -22,7 +22,10 @@ class PiecesController < ApplicationController
   end
 
   def castling
-    @
+    @king = current_user.pieces.where(type: "King").first
+    @rook_for_castling = Piece.find(params[:id])
+    @game = @rook_for_castling.game
+    @rook_for_castling.castle(piece_params)
   end
 
   private

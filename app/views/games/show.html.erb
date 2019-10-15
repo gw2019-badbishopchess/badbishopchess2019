@@ -61,10 +61,10 @@
   <br/>
   <br/>
   <br/>
-
+<!--- add logic that would say if rook to king is unobstructed one way or another way the buttons would show... also if move count is zero for rook and king-->
   <div class="castling">
-    <% queen_side = @pieces.where(type: "Rook", user_id: current_user.id, x_coordinate: 1).first %>
-    <% king_side = @pieces.where(type: "Rook", user_id: current_user.id, x_coordinate: 8).first %>
+    <% queen_side = @pieces.where(type: "Rook", user_id: current_user.id, piece_move_count: 0, x_coordinate: 1).first %>
+    <% king_side = @pieces.where(type: "Rook", user_id: current_user.id, piece_move_count: 0, x_coordinate: 8).first %>
     <% if !queen_side.nil? || !king_side.nil? %>
       <h2>You can castle. </h2>
       <h4>Here are your possible options</h4>
