@@ -119,16 +119,23 @@ class Piece < ApplicationRecord
   end
 
   def move_to!(piece_params)
+    puts "!!!!!!!!!!!!Move-To !!!!!!!!!!!!!!!!!!!!!!!!!!"
+    puts "!!!!!!!!!!!!!!!!!! #{self.type}"
     if self.type == 'King' && self.can_castle?(piece_params[:x_coordinate])
       self.castle(piece_params[:x_coordinate])
       return
     end
+    puts "######### 128"
     if self.is_valid?(piece_params[:x_coordinate], piece_params[:y_coordinate]) == true && self.contains_own_piece?(piece_params[:x_coordinate], piece_params[:y_coordinate]) == false
+      puts "^^^^^^^^^^^^^^ 130"
       self.update_attributes(x_coordinate: piece_params[:x_coordinate], y_coordinate: piece_params[:y_coordinate])
     else
+      puts "&&&&&&&&&& 133"
       flash[:alert] = "This is not a valid move"
     end
+    puts "******************** 136"
     if self.check_to_king?
+      puts "_______________________ 138"
       flash[:alert] = "Error: Check to the King!" 
     end
   end
