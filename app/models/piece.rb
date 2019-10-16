@@ -104,7 +104,6 @@ class Piece < ApplicationRecord
     if game.pieces.find_by(x_coordinate: x_end, y_coordinate: y_end) != nil
       piece = game.pieces.find_by(x_coordinate: x_end, y_coordinate: y_end)
         if piece.color_white == true && self.user_id == game.white_player_id || piece.color_white == false && self.user_id == game.black_player_id
-          puts "Error: Obstructed by Own Piece!"
           render plain: "Error: Obstructed by Own Piece"
         else
           remove_piece(piece)
@@ -119,24 +118,12 @@ class Piece < ApplicationRecord
   end
 
   def move_to!(piece_params)
-    puts "!!!!!!!!!!!!Move-To !!!!!!!!!!!!!!!!!!!!!!!!!!"
-    puts "!!!!!!!!!!!!!!!!!! #{self.type}"
-    if self.type == 'King' && self.can_castle?(piece_params[:x_coordinate])
-      self.castle(piece_params[:x_coordinate])
-      return
-    end
-    puts "######### 128"
-    if self.is_valid?(piece_params[:x_coordinate], piece_params[:y_coordinate]) == true && self.contains_own_piece?(piece_params[:x_coordinate], piece_params[:y_coordinate]) == false
-      puts "^^^^^^^^^^^^^^ 130"
+    if self.is_valid?(piece_params[:x_coordinate], piece_params[:y_coordinate]) == true && 
+      self.contains_own_piece?(piece_params[:x_coordinate], piece_params[:y_coordinate]) == false &&
+      self.is_obstructed?([piece_params[:x_coordinate], piece_params[:y_coordinate]]) == false
+      # will need to put in is_king_in_check at a later point once reformatted
       self.update_attributes(x_coordinate: piece_params[:x_coordinate], y_coordinate: piece_params[:y_coordinate])
-    else
-      puts "&&&&&&&&&& 133"
-      flash[:alert] = "This is not a valid move"
-    end
-    puts "******************** 136"
-    if self.check_to_king?
-      puts "_______________________ 138"
-      flash[:alert] = "Error: Check to the King!" 
+      return
     end
   end
 
@@ -164,13 +151,18 @@ class Piece < ApplicationRecord
     white_king = game.pieces.where(color_white: true, type: "King").first
     black_king = game.pieces.where(color_white: false, type: "King").first
     game.pieces.each do | piece |
+      puts "@@@@@@@@@@@@@@@@@ #{piece.type}"
       if piece.x_coordinate != nil && piece.is_valid?(white_king.x_coordinate, white_king.y_coordinate)
+        "*************** 169 #{piece.type}"
         return true
       elsif piece.x_coordinate != nil && piece.is_valid?(black_king.x_coordinate, black_king.y_coordinate)
+        "-------------------- 172 #{piece.type}"
         return true
       else
+         "%%%%%%%%%%%%%%%%%%%%%% 175 #{piece.type}"
         return false
       end
+      puts "++++++++++++++++++++++ 178 #{piece.type}"
     end
   end
 

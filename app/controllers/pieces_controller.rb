@@ -12,7 +12,6 @@ class PiecesController < ApplicationController
     @piece = Piece.find(params[:id])
     @game = @piece.game
     @piece.move_to!(piece_params)
-    redirect_to game_path(@game)
   end
 
   def create
@@ -39,6 +38,6 @@ class PiecesController < ApplicationController
   end
 
   def piece_params
-    params.require(:piece).permit(:x_coordinate, :y_coordinate, :captured, :user_id, :game_id, :white_player_id, :black_player_id, :type, :game)
+    params.require(:piece).permit(:id, :x_coordinate, :y_coordinate, :captured, :user_id, :game_id, :white_player_id, :black_player_id, :type)
   end
 end
