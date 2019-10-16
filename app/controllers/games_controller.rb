@@ -29,6 +29,11 @@ class GamesController < ApplicationController
     redirect_to game_path(@game)
   end
 
+  def forfeit
+    @game = Game.find_by_id(params[:id])
+    redirect_to root_path
+  end
+
   private
 
   def game_params

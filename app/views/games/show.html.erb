@@ -41,6 +41,19 @@
       <% end %>
     </tbody>
   </table>
+
+  
+        <%= simple_form_for @game, url: forfeit_game_path(@game) do |f| %>
+          <% if current_user.id == @game.white_player_id %>
+            <%= f.input :winner_user_id, as: :hidden, :input_html => { :value => @game.black_player_id } %>
+            <%= f.input :loser_user_id, as: :hidden, :input_html => { :value => @game.white_player_id } %>
+          <% else %>
+            <%= f.input :winner_user_id, as: :hidden, :input_html => { :value => @game.white_player_id } %>
+            <%= f.input :loser_user_id, as: :hidden, :input_html => { :value => @game.black_player_id } %>
+          <% end %>
+          <span class="float-right"><%= f.submit "Forfeit", class: "forfeit btn btn-danger btn-lg" %></span>
+        <% end %>
+      
 </div>
 
 </body>
