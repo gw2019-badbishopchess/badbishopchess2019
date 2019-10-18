@@ -91,7 +91,7 @@ class Piece < ApplicationRecord
 
     # throws runtime error if not straight line 
     # returns false if straight slope is unoccupied
-    if @slope.abs != 1.0
+    if @slope.abs != 1.0 && self.type != "Knight"
       fail 'path is not a straight line'
     else return false
     end
@@ -104,7 +104,8 @@ class Piece < ApplicationRecord
     if game.pieces.find_by(x_coordinate: x_end, y_coordinate: y_end) != nil
       piece = game.pieces.find_by(x_coordinate: x_end, y_coordinate: y_end)
         if piece.color_white == true && self.user_id == game.white_player_id || piece.color_white == false && self.user_id == game.black_player_id
-          render plain: "Error: Obstructed by Own Piece"
+          # render plain: "Error: Obstructed by Own Piece"
+          return true
         else
           remove_piece(piece)
           return false
@@ -118,9 +119,10 @@ class Piece < ApplicationRecord
   end
 
   def move_to!(piece_params)
-    self.is_valid?(piece_params[:x_coordinate], piece_params[:y_coordinate]) == true && 
-      self.contains_own_piece?(piece_params[:x_coordinate], piece_params[:y_coordinate]) == false
-    return false if (self.type != 'Knight' && self.is_obstructed?([piece_params[:x_coordinate], piece_params[:y_coordinate]]) == false)
+    puts type 
+    return false unless self.is_valid?(piece_params[:x_coordinate], piece_params[:y_coordinate]) == true && 
+      self.contains_own_piece?(piece_params[:x_coordinate], piece_params[:y_coordinate]) == false 
+    return false if self.is_obstructed?([piece_params[:x_coordinate], piece_params[:y_coordinate]]) == true && self.type != 'Knight'
       # will need to put in is_king_in_check at a later point once reformatted
     self.update_attributes(x_coordinate: piece_params[:x_coordinate], y_coordinate: piece_params[:y_coordinate], piece_move_count: (piece_move_count + 1))
     return
