@@ -122,13 +122,16 @@ class Piece < ApplicationRecord
       self.contains_own_piece?(piece_params[:x_coordinate], piece_params[:y_coordinate]) == false &&
       self.is_obstructed?([piece_params[:x_coordinate], piece_params[:y_coordinate]]) == false
       # will need to put in is_king_in_check at a later point once reformatted
-      self.update_attributes(x_coordinate: piece_params[:x_coordinate], y_coordinate: piece_params[:y_coordinate])
+      self.update_attributes(x_coordinate: piece_params[:x_coordinate], y_coordinate: piece_params[:y_coordinate], piece_move_count: (piece_move_count + 1))
       return
     end
   end
 
     #this will see if the move from the piece is diagonal? will return true if it diagonal
   def diagonal_move?(x, y)
+    puts "---------------------------- diagonal move!"
+    puts (x_coordinate - x.to_i).abs
+    puts (y_coordinate - y.to_i).abs
     return true if (x_coordinate - x.to_i).abs == (y_coordinate - y.to_i).abs && (x_coordinate != x.to_i)
   end
 
@@ -162,7 +165,6 @@ class Piece < ApplicationRecord
          "%%%%%%%%%%%%%%%%%%%%%% 175 #{piece.type}"
         return false
       end
-      puts "++++++++++++++++++++++ 178 #{piece.type}"
     end
   end
 
