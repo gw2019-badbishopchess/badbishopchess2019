@@ -118,20 +118,16 @@ class Piece < ApplicationRecord
   end
 
   def move_to!(piece_params)
-    if self.is_valid?(piece_params[:x_coordinate], piece_params[:y_coordinate]) == true && 
-      self.contains_own_piece?(piece_params[:x_coordinate], piece_params[:y_coordinate]) == false &&
-      self.is_obstructed?([piece_params[:x_coordinate], piece_params[:y_coordinate]]) == false
+    self.is_valid?(piece_params[:x_coordinate], piece_params[:y_coordinate]) == true && 
+      self.contains_own_piece?(piece_params[:x_coordinate], piece_params[:y_coordinate]) == false
+    return false if (self.type != 'Knight' && self.is_obstructed?([piece_params[:x_coordinate], piece_params[:y_coordinate]]) == false)
       # will need to put in is_king_in_check at a later point once reformatted
-      self.update_attributes(x_coordinate: piece_params[:x_coordinate], y_coordinate: piece_params[:y_coordinate], piece_move_count: (piece_move_count + 1))
-      return
-    end
+    self.update_attributes(x_coordinate: piece_params[:x_coordinate], y_coordinate: piece_params[:y_coordinate], piece_move_count: (piece_move_count + 1))
+    return
   end
 
     #this will see if the move from the piece is diagonal? will return true if it diagonal
   def diagonal_move?(x, y)
-    puts "---------------------------- diagonal move!"
-    puts (x_coordinate - x.to_i).abs
-    puts (y_coordinate - y.to_i).abs
     return true if (x_coordinate - x.to_i).abs == (y_coordinate - y.to_i).abs && (x_coordinate != x.to_i)
   end
 
