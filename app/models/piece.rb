@@ -119,7 +119,6 @@ class Piece < ApplicationRecord
   end
 
   def move_to!(piece_params)
-    puts type 
     return false unless self.is_valid?(piece_params[:x_coordinate], piece_params[:y_coordinate]) == true && 
       self.contains_own_piece?(piece_params[:x_coordinate], piece_params[:y_coordinate]) == false 
     return false if self.is_obstructed?([piece_params[:x_coordinate], piece_params[:y_coordinate]]) == true && self.type != 'Knight'
