@@ -92,6 +92,7 @@ class Piece < ApplicationRecord
     # throws runtime error if not straight line 
     # returns false if straight slope is unoccupied
     if @slope.abs != 1.0 && self.type != "Knight"
+      flash[:danger] = "This move is not a straight line and is invalid"
       fail 'path is not a straight line'
     else return false
     end

@@ -17,6 +17,7 @@ class King < Piece
     opponenet_pieces.each do | piece |
       return false unless piece.user_id != self.user_id && !piece.x_coordinate.nil? && piece.is_valid?(x_cord_dest, y_cord_dest)
     end
+    flash[:danger] = 'Your King is in check - this move is not allowed.' if true
   end
 
   #these coordinates are for the king's position - either at x-coordinate = 3 or x-coordinate = 7

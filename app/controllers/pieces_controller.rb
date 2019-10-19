@@ -5,6 +5,7 @@ class PiecesController < ApplicationController
     @piece = Piece.find_by_id(params[:id])
     @game = @piece.game
     @pieces = @game.pieces
+    flash[:danger] = 'You showed a game!'
     redirect_to game_path(@game)
   end
 
@@ -27,7 +28,10 @@ class PiecesController < ApplicationController
     @rook = Piece.find(params[:id])
     @game = @rook.game
     @king = @game.pieces.where(type: 'King', user_id: current_user.id).first
-    @king.castle(castling_x_coord)
+    if @king.can_castle?(castling_x_coord)
+      @king.castle(castling_x_coord)
+    else flash[:danger] = 'You cannot castle.'
+    end
     redirect_to game_path(@game)
   end
 
