@@ -37,6 +37,7 @@
               <% end %>
             </td>
           <% end %>
+<<<<<<< Updated upstream
         </tr>
       <% end %>
     </tbody>
@@ -45,6 +46,27 @@
 <br />
 <br />
 </div>
+=======
+        </div>
+      </tbody>
+    </table>
+  </div>
+  <br />
+  <br />
+  <div>
+     <% if @game.black_player_id.present? && @game.white_player_id.present? %>
+        <%= simple_form_for @game, url: forfeit_game_path(@game) do |f| %>
+          <% if current_user.id == @game.white_player_id %>
+            <%= f.input :winning_user_id, as: :hidden, :input_html => { :value => @game.black_player_id } %>
+          <% else %>
+            <%= f.input :winning_user_id, as: :hidden, :input_html => { :value => @game.white_player_id } %>
+          <% end %>
+          <span class="float-right"><%= f.submit "Forfeit", class: "forfeit btn btn-danger btn-lg" %></span>
+        <% end %>
+      <% end %>
+  </div>
+</body>
+>>>>>>> Stashed changes
 
 
 </body>
