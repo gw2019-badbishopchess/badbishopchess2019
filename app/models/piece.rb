@@ -165,4 +165,6 @@ class Piece < ApplicationRecord
     end
   end
 
+   
+
 end
