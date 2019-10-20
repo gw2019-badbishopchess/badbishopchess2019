@@ -16,7 +16,10 @@ class Pawn < Piece
       return true
     elsif color_white == false && x_dist == 0 && y_dist == 1 && !occupied?(new_x_coord, new_y_coord) && new_y_coord.to_i <= self.y_coordinate
       return true
-    elsif pawn_promption?
+    elsif x_dist == 0 && y_dist == 0
+      return false
+    elsif pawn_promotion?
+      self.update_attributes(type: "Queen")
       return true
     else 
       return false
@@ -26,10 +29,11 @@ class Pawn < Piece
 # Existing Errors in pawn_promotion
 # Taking opponent piece right after promotion doesn't change piece image
 # Piece image doesn't change until after move
-  def pawn_promption?
+  def pawn_promotion?
     pawn = game.pieces.where(type: "Pawn")
-    (self.y_coordinate == 8 && self.color_white == true) || (self.y_coordinate == 1 && self.color_white == false)
-    self.update_attributes(type: "Queen")
+    if self.type == "Pawn" && ((self.y_coordinate == 8 && self.color_white == true) || (self.y_coordinate == 1 && self.color_white == false))
+      self.update_attributes(type: "Queen")
+    end
   end
 
 end

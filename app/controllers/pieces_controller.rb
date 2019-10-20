@@ -12,6 +12,7 @@ class PiecesController < ApplicationController
     @piece = Piece.find(params[:id])
     @game = @piece.game
     @piece.move_to!(piece_params)
+    @piece.update(piece_params)
   end
 
   def create

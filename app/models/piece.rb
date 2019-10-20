@@ -124,6 +124,9 @@ class Piece < ApplicationRecord
     return false if self.is_obstructed?([piece_params[:x_coordinate], piece_params[:y_coordinate]]) == true && self.type != 'Knight'
       # will need to put in is_king_in_check at a later point once reformatted
     self.update_attributes(x_coordinate: piece_params[:x_coordinate], y_coordinate: piece_params[:y_coordinate], piece_move_count: (piece_move_count + 1))
+    if self.type == "Pawn" && self.pawn_promotion?
+      self.update_attributes(type: "Queen")
+    end
     return
   end
 
