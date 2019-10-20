@@ -1,4 +1,5 @@
 @import "bootstrap";
+@import url('https://fonts.googleapis.com/css?family=Noto+Sans|Open+Sans&display=swap');
 
 .badBishop {
   background-color: #feda6a;
@@ -61,7 +62,9 @@ table {
   color: red;
 }
 td {
-    width: 50px; height: 50px;
+    width: 50px; 
+    height: 50px;
+    text-align: center;
 }
 
 tr:nth-child(odd) td:nth-child(even), tr:nth-child(even) td:nth-child(odd) {
@@ -99,4 +102,12 @@ tr:nth-child(odd) td:nth-child(even), tr:nth-child(even) td:nth-child(odd) {
   width: 50%;
   text-align: center;
   font-size: 2rem;
+}
+
+.last-moved-piece {
+  background: green;
+}
+
+.ui-droppable-hover {
+  border: red;
 }

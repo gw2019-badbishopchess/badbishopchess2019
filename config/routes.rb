@@ -10,6 +10,14 @@ Rails.application.routes.draw do
       put :join
       patch :forfeit
       put :forfeit
+
+    end
+  end
+
+  resources :pieces do
+    member do
+      patch :castling
+      put :castling
     end
 
   end
@@ -17,7 +25,6 @@ Rails.application.routes.draw do
     resources :pieces, only:[:show, :update]
   end
 
-    
 
   root 'static_pages#index' #added for homepage
 
