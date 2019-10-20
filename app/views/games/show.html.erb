@@ -1,41 +1,3 @@
-<script>
-
-  $(function() {
-    $('.moveable').draggable({ 
-        // snap: 'td',
-        cursor: 'move',
-        // snapTolerance: 20,
-        containment: 'document'
-      });
-    $('td').droppable({
-        tolerance: 'fit',
-        drop: function(event, ui) {
-          let pieceId = ui.draggable[0].id;
-          $.ajax({
-            type: 'PUT',
-            url: `/pieces/${ui.draggable[0].id}`,
-            dataType: 'json',
-            data: {
-              piece: {
-                x_coordinate: $(this).attr('data-x-coord'),
-                y_coordinate: $(this).attr('data-y-coord')
-              },
-            },
-            success: function() {
-              console.log('this move was successful');
-            },
-            error: function() {
-              alert(`There was an error with your piece move.`);
-              console.log(`There was an error with your piece move.`)
-            }
-          });
-        }  
-      });    
-      
-    });
-</script>
-
-
 <% if @game.present? %>
   <div class="GameHeader">
     <%= @game.name %>
@@ -78,24 +40,65 @@
   <div class="chessboard col-6">
     <table>
       <tbody>
-        <div class="square">
           <% (1..8).each do |y_coord| %>
             <tr id = <%= y_coord %>>
               <% (1..8).each do |x_coord| %>
-                <td data-x-coord= <%= x_coord %> data-y-coord= <%= y_coord %> class= <%= "#{(y_coord % 2 == x_coord % 2 ? "white-square droppable-square" : "black-square droppable-square")}" %> >
-                  <% if boardpiece = @pieces.where("(x_coordinate = ? AND y_coordinate = ?)", x_coord, y_coord).first %>
-                    <span class= '<%= boardpiece.type %> moveable', id='<%= boardpiece.id %>' data="<%=boardpiece.color_white%>, <%= boardpiece.user_id %>, <%= @game.black_player_id %>">
-                      <%= image_tag boardpiece.image %>
-                      <%# <%= link_to boardpiece.type, piece_path(boardpiece) %> 
-                    </span>
-                  <% end %>
+                <td data-x-coord= <%= x_coord %> data-y-coord= <%= y_coord %> 
+                    class = droppable 
+                    <%= "#{(y_coord % 2 == x_coord % 2 ? "white-square droppable-square" : "black-square droppable-square")}" %> >
+                      <% if boardpiece = @pieces.where("(x_coordinate = ? AND y_coordinate = ?)", x_coord, y_coord).first %>
+                        <span class= "piece" data-id=<%= boardpiece.id %> id="<%= boardpiece.id %>" data-x-coord= <%= x_coord %> data-y-coord= <%= y_coord %> >
+                          <%= image_tag boardpiece.image %>
+                        </span> 
+                      <% end %>
                 </td>
               <% end %>
             </tr>
           <% end %>
-        </div>
       </tbody>
     </table>
   </div>
-
 </body>
+<script>
+$(document).ready($(function() {
+    $('.piece').draggable({ 
+        snap: 'droppable',
+        revert: 'invalid'
+      });
+    $('.droppable').droppable({
+        drop: function(event, ui) {
+          let piece = ui.draggable
+          let destination_square = $(this);
+          var update_piece = {
+            id: piece.data('id'),
+            game_id: piece.data('game-id'),
+            x_coordinate: destination_square.data('x-coord'),
+            y_coordinate: destination_square.data('y-coord')
+          }
+          $.ajax({
+            type: 'PUT',
+            url: `/pieces/${update_piece.id}`,
+            dataType: 'json',
+            data: {
+              piece: {
+                game_id: update_piece.game_id, 
+                id: update_piece.id,
+                x_coordinate: update_piece.x_coordinate,
+                y_coordinate: update_piece.y_coordinate
+              },
+            },
+            success: function(data) {
+              destination_square.empty();
+              location.reload(true);
+            },
+            error: function() {
+              alert(`There was an error with your piece move.`);
+              console.log(ui.draggable);
+              location.reload(true);
+            }
+          });
+        }  
+      });    
+      
+    }));
+</script>

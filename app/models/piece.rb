@@ -91,7 +91,7 @@ class Piece < ApplicationRecord
 
     # throws runtime error if not straight line 
     # returns false if straight slope is unoccupied
-    if @slope.abs != 1.0
+    if @slope.abs != 1.0 && self.type != "Knight"
       fail 'path is not a straight line'
     else return false
     end
@@ -104,8 +104,8 @@ class Piece < ApplicationRecord
     if game.pieces.find_by(x_coordinate: x_end, y_coordinate: y_end) != nil
       piece = game.pieces.find_by(x_coordinate: x_end, y_coordinate: y_end)
         if piece.color_white == true && self.user_id == game.white_player_id || piece.color_white == false && self.user_id == game.black_player_id
-          puts "Error: Obstructed by Own Piece!"
-          render plain: "Error: Obstructed by Own Piece"
+          # render plain: "Error: Obstructed by Own Piece"
+          return true
         else
           remove_piece(piece)
           return false
@@ -119,18 +119,12 @@ class Piece < ApplicationRecord
   end
 
   def move_to!(piece_params)
-    if self.type == 'King' && self.can_castle?(piece_params[:x_coordinate])
-      self.castle(piece_params[:x_coordinate])
-      return
-    end
-    if self.is_valid?(piece_params[:x_coordinate], piece_params[:y_coordinate]) == true && self.contains_own_piece?(piece_params[:x_coordinate], piece_params[:y_coordinate]) == false
-      self.update_attributes(x_coordinate: piece_params[:x_coordinate], y_coordinate: piece_params[:y_coordinate])
-    else
-      flash[:alert] = "This is not a valid move"
-    end
-    if self.check_to_king?
-      flash[:alert] = "Error: Check to the King!" 
-    end
+    return false unless self.is_valid?(piece_params[:x_coordinate], piece_params[:y_coordinate]) == true && 
+      self.contains_own_piece?(piece_params[:x_coordinate], piece_params[:y_coordinate]) == false 
+    return false if self.is_obstructed?([piece_params[:x_coordinate], piece_params[:y_coordinate]]) == true && self.type != 'Knight'
+      # will need to put in is_king_in_check at a later point once reformatted
+    self.update_attributes(x_coordinate: piece_params[:x_coordinate], y_coordinate: piece_params[:y_coordinate], piece_move_count: (piece_move_count + 1))
+    return
   end
 
     #this will see if the move from the piece is diagonal? will return true if it diagonal
@@ -157,11 +151,15 @@ class Piece < ApplicationRecord
     white_king = game.pieces.where(color_white: true, type: "King").first
     black_king = game.pieces.where(color_white: false, type: "King").first
     game.pieces.each do | piece |
+      puts "@@@@@@@@@@@@@@@@@ #{piece.type}"
       if piece.x_coordinate != nil && piece.is_valid?(white_king.x_coordinate, white_king.y_coordinate)
+        "*************** 169 #{piece.type}"
         return true
       elsif piece.x_coordinate != nil && piece.is_valid?(black_king.x_coordinate, black_king.y_coordinate)
+        "-------------------- 172 #{piece.type}"
         return true
       else
+         "%%%%%%%%%%%%%%%%%%%%%% 175 #{piece.type}"
         return false
       end
     end
