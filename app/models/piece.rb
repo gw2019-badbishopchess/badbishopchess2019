@@ -127,6 +127,7 @@ class Piece < ApplicationRecord
     return
   end
 
+
     #this will see if the move from the piece is diagonal? will return true if it diagonal
   def diagonal_move?(x, y)
     if (x_coordinate - x.to_i).abs == (y_coordinate - y.to_i).abs && (x_coordinate != x.to_i)
@@ -155,9 +156,9 @@ class Piece < ApplicationRecord
     black_king = game.pieces.where(color_white: false, type: "King").first
     game.pieces.each do | piece |
       return true if piece.x_coordinate != nil && piece.color_white == false && piece.is_valid?(white_king.x_coordinate, white_king.y_coordinate) && 
-        piece.is_obstructed?([white_king.x_coordinate, white_king.y_coordinate]) == false && self.type != 'Knight'
+        (piece.is_obstructed?([white_king.x_coordinate, white_king.y_coordinate]) == false && self.type != 'Knight')
       return true if piece.x_coordinate != nil && piece.color_white == true && piece.is_valid?(black_king.x_coordinate, black_king.y_coordinate) && 
-        piece.is_obstructed?([black_king.x_coordinate, black_king.y_coordinate]) == false && self.type != 'Knight'
+        (piece.is_obstructed?([black_king.x_coordinate, black_king.y_coordinate]) == false && self.type != 'Knight')
     end
     return false
   end

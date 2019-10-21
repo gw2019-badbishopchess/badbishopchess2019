@@ -1,7 +1,7 @@
 class King < Piece
 
   def is_valid?(x_destinantion, y_destination)
-    return false if self.in_check?(x_destinantion, y_destination)
+    return false if self.in_check?(x_destinantion, y_destination) == false
     return true if (x_coordinate - x_destinantion.to_i).abs <= 1 && (y_coordinate - y_destination.to_i).abs <= 1
     if self.can_castle?(x_destinantion)
       self.castle(x_destinantion)
@@ -15,9 +15,11 @@ class King < Piece
     opponenet_pieces = game.pieces.where(color_white: !color_white)
     return false if !opponenet_pieces.nil?
     opponenet_pieces.each do | piece |
-      return false unless piece.user_id != self.user_id && !piece.x_coordinate.nil? && piece.is_valid?(x_cord_dest, y_cord_dest)
+      if piece.user_id != self.user_id && !piece.x_coordinate.nil? && piece.is_valid?(x_cord_dest, y_cord_dest)
+        return true if piece.is_obstructed?([x_cord_dest, y_cord_dest]) == false && piece.type != "Knight"
+      end
     end
-    flash[:danger] = 'Your King is in check - this move is not allowed.' if true
+    return false
   end
 
   #these coordinates are for the king's position - either at x-coordinate = 3 or x-coordinate = 7
@@ -39,7 +41,6 @@ class King < Piece
     if can_castle?(new_x_coord)
       self.update_attributes(x_coordinate: new_x_coord, piece_move_count: 1)
       if new_x_coord == 3
-
         castling_rook = self.pieces.where(type: "Rook", user_id: self.user.id, x_coordinate: 1).first
         castling_rook.update_attributes(x_coordinate: 4, piece_move_count: 1)
       elsif new_x_coord == 7

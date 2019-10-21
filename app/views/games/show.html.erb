@@ -5,13 +5,13 @@
 
   <div class="GameSubHeader">
     <div class="WhitePlayerName">
-      <%= @game.white_player_id %>
+      White Player's Id: <%= @game.white_player_id %>
     </div>
 <% end %>
 
   <div class="BlackPlayerName">
     <% if @game.black_player_id.present? %>
-      <%= @game.black_player_id %>
+      Black Player's Id: <%= @game.black_player_id %>
     <% else %>
       <p> Waiting for Player... </p>
     <% end %>
@@ -86,11 +86,6 @@ $(document).ready($(function() {
             },
             success: function(data) {
               destination_square.empty();
-              location.reload(true);
-            },
-            error: function() {
-              alert(`There was an error with your piece move.`);
-              console.log(ui.draggable);
               location.reload(true);
             }
           });
