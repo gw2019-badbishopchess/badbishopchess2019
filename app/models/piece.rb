@@ -16,7 +16,6 @@ class Piece < ApplicationRecord
   # returns 'horizontal', 'vertical' or if slope, returns degree of slope
   def check_path(x1, y1, x2, y2)
     if y1 == y2 
-      puts "horizontal"
       return 'horizontal'
     elsif x1 == x2
       return 'vertical'
@@ -30,7 +29,6 @@ class Piece < ApplicationRecord
   # returns True if one or more spaces are occupied, otherwise False
   # runtime error if not straight line
   def is_obstructed?(destination)
-    puts "in obstructed $$$$$$$$$$$$$"
     @game = game
     
     x1 = self.x_coordinate.to_i
@@ -39,7 +37,6 @@ class Piece < ApplicationRecord
     y2 = destination[1].to_i
 
     path = check_path(x1, y1, x2, y2)
-    puts "line 42"
 
     # checks rightward horizontal if occupied
     if path == 'horizontal' && x1 < x2
@@ -47,7 +44,6 @@ class Piece < ApplicationRecord
         return true if occupied?(x, y1)
       end
     end
-    puts "line 50"
     
     
     # checks leftward horizontal if occupied
@@ -56,7 +52,6 @@ class Piece < ApplicationRecord
         return true if occupied?(x, y1)
       end
     end
-    puts "line 59"
    
     # checks upward vertical if occupied
     if path == 'vertical' && y1 < y2 
@@ -129,8 +124,12 @@ class Piece < ApplicationRecord
     return false unless self.is_valid?(piece_params[:x_coordinate], piece_params[:y_coordinate]) == true
     return false unless self.contains_own_piece?(piece_params[:x_coordinate], piece_params[:y_coordinate]) == false 
     return false if self.is_obstructed?([piece_params[:x_coordinate], piece_params[:y_coordinate]]) == true && self.type != 'Knight'
-    self.update_attributes(x_coordinate: piece_params[:x_coordinate], y_coordinate: piece_params[:y_coordinate], piece_move_count: (piece_move_count + 1)) unless self.type == 'King' && self.can_castle?(piece_params[:x_coordinate], piece_params[:y_coordinate]) == true
-    return
+    if self.type == 'King' && self.can_castle?(piece_params[:x_coordinate], piece_params[:y_coordinate]) == true
+      return 
+    else 
+      self.update_attributes(x_coordinate: piece_params[:x_coordinate], y_coordinate: piece_params[:y_coordinate], piece_move_count: (piece_move_count + 1))
+      return true
+    end
   end
 
 

@@ -12,7 +12,8 @@ class PiecesController < ApplicationController
     @piece = Piece.find(params[:id])
     @game = @piece.game
     if @piece.move_to!(piece_params)
-    else flash[:danger] = "You have made an illegel move!"
+    else 
+      flash[:danger] = "You have made an illegel move!"
     end
     flash[:danger] = "The King is in Check!" if @piece.check_to_king? 
   end

@@ -9,10 +9,12 @@ module GamesHelper
   end
 
   def legal_to_castle_kingside?
-    @king.can_castle?(@king.x_coordinate + 2, @king.y_coordinate)
+    king = @pieces.where(type: "King", user_id: current_user.id).first
+    king.can_castle?(king.x_coordinate + 2, king.y_coordinate)
   end
 
   def legal_to_castle_queenside?
-    @king.can_castle?(@king.x_coordinate - 2, @king.y_coordinate)
+    king = @pieces.where(type: "King", user_id: current_user.id).first
+    king.can_castle?(king.x_coordinate - 2, king.y_coordinate)
   end
 end

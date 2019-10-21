@@ -24,28 +24,50 @@ class King < Piece
 
   #these coordinates are for the king's position - either at x-coordinate = 3 or x-coordinate = 7
   def can_castle?(new_x_coord, new_y_coord)
-
-    return false unless self.piece_move_count.nil?
+    return false unless self.piece_move_count == 0
     return false unless x_distance(new_x_coord) == 2 && y_distance(new_y_coord) == 0
-    if new_x_coord > self.x_coordinate
-      castling_rook = game.pieces.where(type: "Rook", user_id: self.user.id, x_coordinate: 8).first
+    king = game.pieces.where(type: "King", user_id: self.user_id).first
+    if new_x_coord > king.x_coordinate
+      castling_rook = game.pieces.where(type: "Rook", user_id: self.user_id, piece_move_count: 0, x_coordinate: 8).first
     else
-      castling_rook = game.pieces.where(type: "Rook", user_id: self.user.id, x_coordinate: 1).first
+      castling_rook = game.pieces.where(type: "Rook", user_id: self.user_id, piece_move_count: 0, x_coordinate: 1).first
     end
     return false if castling_rook.nil?
-    puts "line 36 in can castle -------------"
-    puts self.type
-    puts "#{self.is_obstructed?([castling_rook.x_coordinate, castling_rook.y_coordinate])}"
-    puts "x: #{castling_rook.x_coordinate}"
-    puts "y: #{castling_rook.y_coordinate}"
-    puts castling_rook.piece_move_count.nil?
-    return false if !castling_rook.piece_move_count.nil? 
-    puts "line 43"
-    if self.is_obstructed?([castling_rook.x_coordinate, castling_rook.y_coordinate])
+    return false if castling_rook.piece_move_count != 0
+    puts "in can castle ###########################################################"
+    return true if self.line_obstructed_queenside?(castling_rook.x_coordinate, castling_rook.y_coordinate) == false 
+    return true if self.line_obstructed_kingside?(castling_rook.x_coordinate, castling_rook.y_coordinate) == false
+    puts "in can castle line 29 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+    return false
+  end
+
+  def line_obstructed_queenside?(x_coord, y_coord)
+    if game.pieces.where(x_coordinate: 2, y_coordinate: self.y_coordinate)
+      obstructedpiece = game.pieces.where(x_coordinate: 2, y_coordinate: self.y_coordinate)
+      puts obstructedpiece
+      puts "there is a piece in the x: 2"
+      return true
+    elsif game.pieces.where(x_coordinate: 3, y_coordinate: self.y_coordinate)
+      puts "there is a piece in the x: 3"
+      return true
+    elsif game.pieces.where(x_coordinate: 4, y_coordinate: self.y_coordinate)
+      puts "there is a piece in the x: 4"
+      return true
+    else
       return false
     end
-    puts "line 47"
-    return true
+  end
+
+  def line_obstructed_kingside?(x_coord, y_coord)
+    if game.pieces.where(x_coordinate: 6, y_coordinate: self.y_coordinate)
+      puts "there is a piece in the x: 6"
+      return true
+    elsif game.pieces.where(x_coordinate: 7, y_coordinate: self.y_coordinate)
+      puts "there is a piece in the x: 7"
+      return true
+    else
+      return false
+    end
   end
 
   # the update method these coordinates are for the king's position - either at x-coordinate = 3 or x-coordinate = 7
