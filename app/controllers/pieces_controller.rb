@@ -5,7 +5,6 @@ class PiecesController < ApplicationController
     @piece = Piece.find_by_id(params[:id])
     @game = @piece.game
     @pieces = @game.pieces
-    flash[:danger] = 'You showed a game!'
     redirect_to game_path(@game)
   end
 
@@ -13,6 +12,9 @@ class PiecesController < ApplicationController
     @piece = Piece.find(params[:id])
     @game = @piece.game
     @piece.move_to!(piece_params)
+    if @piece.check_to_king? 
+      flash[:danger] = "The King is in Check!"
+    end
   end
 
   def create
