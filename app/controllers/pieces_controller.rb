@@ -28,7 +28,6 @@ class PiecesController < ApplicationController
   end
 
   def castling
-    puts "in castling!!!!! &&&&&&&&&&"
     @rook = Piece.find(params[:id])
     @game = @rook.game
     @king = @game.pieces.where(type: 'King', user_id: current_user.id).first

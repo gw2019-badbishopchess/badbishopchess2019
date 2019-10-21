@@ -22,13 +22,13 @@
   <br/>
   <br/>
   <div class="castling">
-    <% if (!queenside_rook.nil? || !kingside_rook.nil?) && (legal_to_castle_queenside? || legal_to_castle_kingside?) %>
-      <h2>You can castle! </h2>
-      <% if !queenside_rook.nil? && legal_to_castle_queenside? == true %>
+    <% if (!queenside_rook.nil? && legal_to_castle?(king_to_castle.x_coordinate - 2, king_to_castle.y_coordinate)) || (!kingside_rook.nil? && legal_to_castle?(king_to_castle.x_coordinate + 2, king_to_castle.y_coordinate)) %>
+
+      <% if !queenside_rook.nil? && legal_to_castle?(king_to_castle.x_coordinate - 2, king_to_castle.y_coordinate) %>
         <%= link_to 'Your Queenside Rook', castling_piece_path(queenside_rook), class: 'btn btn-info btn-sm', method: :put %>
       <% end %>
       <br />
-      <% if !kingside_rook.nil? && legal_to_castle_kingside? == true %>
+      <% if !kingside_rook.nil? && legal_to_castle?(king_to_castle.x_coordinate + 2, king_to_castle.y_coordinate) %>
         <%= link_to 'Your Kingside Rook', castling_piece_path(kingside_rook), class: 'btn btn-info btn-sm', method: :put %>
       <% end %>
     <% end %>

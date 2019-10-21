@@ -26,19 +26,19 @@ class King < Piece
   def can_castle?(new_x_coord, new_y_coord)
     return false unless self.piece_move_count == 0
     return false unless x_distance(new_x_coord) == 2 && y_distance(new_y_coord) == 0
-    king = game.pieces.where(type: "King", user_id: self.user_id).first
-    if new_x_coord > king.x_coordinate
+    if new_x_coord > self.x_coordinate
       castling_rook = game.pieces.where(type: "Rook", user_id: self.user_id, piece_move_count: 0, x_coordinate: 8).first
     else
       castling_rook = game.pieces.where(type: "Rook", user_id: self.user_id, piece_move_count: 0, x_coordinate: 1).first
     end
     return false if castling_rook.nil?
-    return false if castling_rook.piece_move_count != 0
-    puts "in can castle ###########################################################"
-    return true if self.line_obstructed_queenside?(castling_rook.x_coordinate, castling_rook.y_coordinate) == false 
-    return true if self.line_obstructed_kingside?(castling_rook.x_coordinate, castling_rook.y_coordinate) == false
-    puts "in can castle line 29 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
-    return false
+    if !castling_rook.nil?
+      return false unless castling_rook.piece_move_count == 0
+      puts "in can castle ------------------------------------------- line 37"
+      return false if is_obstructed?([castling_rook.x_coordinate, castling_rook.y_coordinate])
+      puts "in can castle %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% line 39"
+    end
+    return true
   end
 
   def line_obstructed_queenside?(x_coord, y_coord)
