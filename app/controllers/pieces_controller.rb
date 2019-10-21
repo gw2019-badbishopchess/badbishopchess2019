@@ -27,11 +27,12 @@ class PiecesController < ApplicationController
   end
 
   def castling
+    puts "in castling!!!!! &&&&&&&&&&"
     @rook = Piece.find(params[:id])
     @game = @rook.game
     @king = @game.pieces.where(type: 'King', user_id: current_user.id).first
-    if @king.can_castle?(castling_x_coord)
-      @king.castle(castling_x_coord)
+    if @king.can_castle?(castling_x_coord, @king.y_coordinate)
+      @king.castle(castling_x_coord, @king.y_coordinate)
     else flash[:danger] = 'You cannot castle.'
     end
     redirect_to game_path(@game)
