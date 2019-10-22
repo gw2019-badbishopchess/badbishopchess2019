@@ -121,15 +121,14 @@ class Piece < ApplicationRecord
   end
 
   def move_to!(piece_params)
+    if self.type == 'King' && self.can_castle?(piece_params[:x_coordinate], piece_params[:y_coordinate]) == true
+      self.castle(piece_params[:x_coordinate], piece_params[:y_coordinate])
+      return true
+    end
     return false unless self.is_valid?(piece_params[:x_coordinate], piece_params[:y_coordinate]) == true
     return false unless self.contains_own_piece?(piece_params[:x_coordinate], piece_params[:y_coordinate]) == false 
     return false if self.is_obstructed?([piece_params[:x_coordinate], piece_params[:y_coordinate]]) == true && self.type != 'Knight'
-    if self.type == 'King' && self.can_castle?(piece_params[:x_coordinate], piece_params[:y_coordinate]) == true
-      return 
-    else 
-      self.update_attributes(x_coordinate: piece_params[:x_coordinate], y_coordinate: piece_params[:y_coordinate], piece_move_count: (piece_move_count + 1))
-      return true
-    end
+    return true if self.update_attributes(x_coordinate: piece_params[:x_coordinate], y_coordinate: piece_params[:y_coordinate], piece_move_count: (piece_move_count + 1))
   end
 
 
@@ -160,9 +159,9 @@ class Piece < ApplicationRecord
     white_king = game.pieces.where(color_white: true, type: "King").first
     black_king = game.pieces.where(color_white: false, type: "King").first
     game.pieces.each do | piece |
-      return true if piece.x_coordinate != nil && piece.color_white == false && piece.is_valid?(white_king.x_coordinate, white_king.y_coordinate) && 
+      return true if piece.color_white == false && piece.x_coordinate != nil && piece.is_valid?(white_king.x_coordinate, white_king.y_coordinate) && 
         (piece.is_obstructed?([white_king.x_coordinate, white_king.y_coordinate]) == false && self.type != 'Knight')
-      return true if piece.x_coordinate != nil && piece.color_white == true && piece.is_valid?(black_king.x_coordinate, black_king.y_coordinate) && 
+      return true if piece.color_white == true && piece.x_coordinate != nil && piece.is_valid?(black_king.x_coordinate, black_king.y_coordinate) && 
         (piece.is_obstructed?([black_king.x_coordinate, black_king.y_coordinate]) == false && self.type != 'Knight')
     end
     return false

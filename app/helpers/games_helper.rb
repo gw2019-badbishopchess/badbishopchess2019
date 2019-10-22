@@ -9,7 +9,7 @@ module GamesHelper
   end
 
   def king_to_castle
-    @pieces.where(type: "King", user_id: current_user.id, piece_move_count: 0, x_coordinate: 5).first
+    @pieces.where(type: "King", user_id: current_user.id).first
   end
 
   def legal_to_castle?(new_king_x_coord, new_king_y_coord)

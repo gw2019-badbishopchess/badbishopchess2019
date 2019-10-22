@@ -41,7 +41,7 @@ class PiecesController < ApplicationController
   private
 
   def castling_x_coord
-    params[:x_coordinate] == 1 ? 3 : 7
+    @rook.x_coordinate == 1 ? 3 : 7
   end
 
   def piece_params
