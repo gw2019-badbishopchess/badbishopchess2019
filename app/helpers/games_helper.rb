@@ -8,7 +8,12 @@ module GamesHelper
     @pieces.where(type: "Rook", user_id: current_user.id, piece_move_count: 0, x_coordinate: 8).first
   end
 
-  def legal_to_castle?
-    @king.can_castle?(@king.x_coordinate + 2) || @king.can_castle?(@king.x_coordinate - 2)
+  def king_to_castle
+    @pieces.where(type: "King", user_id: current_user.id).first
   end
+
+  def legal_to_castle?(new_king_x_coord, new_king_y_coord)
+    king_to_castle.can_castle?(new_king_x_coord, new_king_y_coord)
+  end
+
 end
