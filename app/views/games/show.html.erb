@@ -18,7 +18,7 @@
   </div>
 </div>
 
-<body>
+<%# <body> %>
   <br/>
   <br/>
   <div class="castling">
@@ -55,7 +55,31 @@
       </tbody>
     </table>
   </div>
-</body>
+<%# </body> %>
+
+<!------- For Firebase Add----->
+ <script src="https://www.gstatic.com/firebasejs/7.2.1/firebase-app.js"></script>
+ <script src="https://www.gstatic.com/firebasejs/7.2.1/firebase-firestore.js"></script>
+
+<script>
+// Your web app's Firebase configuration - remember to hid API KEY/APP ID, Messaging Send ID and Measurement ID in application YML - try <%= ["FIREBASE_API_KEY"]>
+  var firebaseConfig = {
+    apiKey: "AIzaSyB1ir_XR4LZek_PMS1X7GbDvT5pFh11pD0",
+    authDomain: "bad-bishop.firebaseapp.com",
+    databaseURL: "https://bad-bishop.firebaseio.com",
+    projectId: "bad-bishop",
+    storageBucket: "bad-bishop.appspot.com",
+    messagingSenderId: "162286235847",
+    appId: "1:162286235847:web:1eb091fcd1841935160ee2",
+    measurementId: "G-ZGQ3GZG46N"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+
+
+</script>
+
+
 <script>
 $(document).ready($(function() {
     $('.piece').draggable({ 
@@ -75,7 +99,6 @@ $(document).ready($(function() {
           $.ajax({
             type: 'PUT',
             url: `/pieces/${update_piece.id}`,
-            // beforeSend: function(xhr) { xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content')) },
             dataType: 'json',
             data: {
               piece: {

@@ -92,5 +92,5 @@ group :development, :test do
   gem 'rspec-rails', '~> 3.8'
   gem "factory_bot_rails"
 end
-
+# Installs jquery ui - for draggable and droppable for front end 
 gem 'jquery-ui-rails'
