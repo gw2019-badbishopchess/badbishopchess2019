@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+  get 'dashboards/show'
   devise_for :users, :controllers => { :omniauth_callbacks => "users/omniauth_callbacks" }
   
   resources :users
@@ -13,6 +14,8 @@ Rails.application.routes.draw do
 
     end
   end
+
+  resource :dashboards, only: [:show] #added for user dashboard
 
   resources :pieces do
     member do
