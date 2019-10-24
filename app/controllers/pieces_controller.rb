@@ -13,7 +13,7 @@ class PiecesController < ApplicationController
     @game = @piece.game
     if @piece.move_to!(piece_params)
     else 
-      flash[:danger] = "You have made an illegel move!"
+      flash[:danger] = "You have made an illegal move!"
     end
     flash[:danger] = "The King is in Check!" if @piece.check_to_king? 
   end
