@@ -26,6 +26,9 @@
         <ul class="navbar-nav mr-auto">
         <% if user_signed_in? %>
           <li class="nav-link">
+            <%= link_to "My Dashboard", dashboard_path, class: "nav-link"%>
+          </li>
+          <li class="nav-link">
             <%= link_to "Sign Out", destroy_user_session_path, method: :delete, class: "nav-link" %> 
           </li>
           <li class="nav-link">
@@ -53,25 +56,40 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLongTitle">Start a New Chess Game</h5>
+            <h5 class="modal-title" id="exampleModalLongTitle">I would like to be...</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
-          <% if current_user.present? %>
-            <%= simple_form_for (Game.new), url: games_path do |f| %>
-              <div class="modal-body">
-                <%= f.input :name %>
-                <!-- f.input :username 'username', value 'username_text' %> -->
-                <%= f.hidden_field 'user_id', value: current_user.id %>
-                <%= f.hidden_field 'white_player_id', value: current_user.id %>
+
+          <div class="row border-0">
+            <% if current_user.present? %>
+              
+              <div class="col border-0 align-items-center">
+                <%= simple_form_for (Game.new), url: games_path do |f| %>
+                  <div class="modal-body">
+                    <%= f.hidden_field 'user_id', value: current_user.id %>
+                    <%= f.hidden_field 'white_player_id', value: current_user.id %>
+                    <h5>White Pieces</h5>
+                      <%= f.submit 'White', :type => :image, :src => image_path("WhiteKing.png"), class: "btn btn-primary" %>
+                  </div>
+                <% end %>
               </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                  <%= f.submit 'Start Game', class: 'btn btn-primary' %>
+
+              <div class="col border-0 align-items-center"> 
+                <%= simple_form_for (Game.new), url: games_path do |f| %>
+                  <div class="modal-body">
+                    <%= f.hidden_field 'user_id', value: current_user.id %>
+                    <%= f.hidden_field 'black_player_id', value: current_user.id %>
+                    <h5>Black Pieces</h5>
+                      <%= f.submit 'Black', :type => :image, :src => image_path("BlackKing.png"), class: "btn btn-primary" %>
+                  </div>
+                <% end %>
               </div>
             <% end %>
-          <% end %>
+
+          </div>
+
         </div>
       </div>
     </div>
