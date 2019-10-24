@@ -1,100 +1,150 @@
-<div class="dashboard-container">
+<div class="container-fluid">
   <div class="row">
-    <div class="col-3 mt-3 ml-3">
-      <div class="card shadow-sm border-0">
-        <div class="card-body">
-          <% if !current_user.username.nil? %>
-            <h5 class="card-title">Hi <%= current_user.username %></h5>
-          <% else %>
-            <h5 class="card-title">Hi Player</h5>
-          <% end %>
-
-
-          <div class="list-group" id="list-tab" role="tablist">
-            <a class="list-group-item d-flex list-group-item-action justify-content-between align-items-center" id="list-played-list" data-toggle="list" href="#list-played" role="tab" aria-controls="played">
-              Games Played
-              <span class="badge badge-secondary badge-pill"><%= current_user.games.count %></span>
-            </a>
-            <a class="list-group-item d-flex list-group-item-action justify-content-between align-items-center active" id="list-open-list" data-toggle="list" href="#list-open" role="tab" aria-controls="open">
-              Games Open
-              <span class="badge badge-secondary badge-pill"><%= open_games.count %></span>
-            </a>
-            <a class="list-group-item d-flex list-group-item-action justify-content-between align-items-center" id="list-won-list" data-toggle="list" href="#list-won"  role="tab" aria-controls="won">
-              Games Won
-              <span class="badge badge-secondary badge-pill"><%= won_games.count %></span>
-            </a>
-            <a class="list-group-item d-flex list-group-item-action justify-content-between align-items-center" id="list-lost-list" data-toggle="list" href="#list-lost"  role="tab" aria-controls="lost">
-              Game Lost
-              <span class="badge badge-secondary badge-pill"><%= lost_games.count %></span>
-            </a>
-            <a class="list-group-item d-flex list-group-item-action justify-content-between align-items-center" id="list-forfeited-list" data-toggle="list" href="#list-forfeited" role="tab" aria-controls="forfeited">
-              Game Forfeited
-              <span class="badge badge-secondary badge-pill"><%= forfeited_games.count %></span>
-            </a>
-          </div>
-
+    <nav class="col-md-3 d-none d-md-block sidebar">
+      <div class="sidebar-sticky pt-5">
+        <div class="list-group" id="list-tab" role="tablist">
+          <a class="list-group-item d-flex list-group-item-action justify-content-center align-items-center" id="list-overview-list" data-toggle="list" href="#list-overview" role="tab" aria-controls="overview">
+            <h6>Overview</h6>
+          </a>
+          <br/>
+          <a class="list-group-item d-flex list-group-item-action justify-content-between align-items-center" id="list-current-list" data-toggle="list" href="#list-current" role="tab" aria-controls="current">
+            Currently Playing
+            <span class="badge badge-secondary badge-pill"><%= open_games.count %></span>
+          </a>
+          <a class="list-group-item d-flex list-group-item-action justify-content-between align-items-center active" id="list-played-list" data-toggle="list" href="#list-played" role="tab" aria-controls="played">
+            Games Played
+            <span class="badge badge-secondary badge-pill"><%= current_user.games.count %></span>
+          </a>
+          <a class="list-group-item d-flex list-group-item-action justify-content-between align-items-center" id="list-open-list" data-toggle="list" href="#list-open" role="tab" aria-controls="open">
+            Games Open
+            <span class="badge badge-secondary badge-pill"><%= open_games.count %></span>
+          </a>
+          <a class="list-group-item d-flex list-group-item-action justify-content-between align-items-center" id="list-won-list" data-toggle="list" href="#list-won"  role="tab" aria-controls="won">
+            Games Won
+            <span class="badge badge-secondary badge-pill"><%= won_games.count %></span>
+          </a>
+          <a class="list-group-item d-flex list-group-item-action justify-content-between align-items-center" id="list-lost-list" data-toggle="list" href="#list-lost"  role="tab" aria-controls="lost">
+            Game Lost
+            <span class="badge badge-secondary badge-pill"><%= lost_games.count %></span>
+          </a>
+          <a class="list-group-item d-flex list-group-item-action justify-content-between align-items-center" id="list-forfeited-list" data-toggle="list" href="#list-forfeited" role="tab" aria-controls="forfeited">
+            Game Forfeited
+            <span class="badge badge-secondary badge-pill"><%= forfeited_games.count %></span>
+          </a>
         </div>
       </div>
-    </div>
-    <div class="col-8 mt-3">
-      <div class="tab-content" id="nav-tabContent">
-        <div class="tab-pane fade" id="list-played" role="tabpanel" aria-labelledby="list-played-list">
-          <div class="row">
-            <% current_user.games.each do |game| %>
-              <div class="col-12 col-sm-4 justify-content-center">
-                <%# logic here for opponent id/username %>
-                <p>this should repeat</p>
-                <p class="text-center"><%= game.state.capitalize %></p><br/>
-                <%= link_to "Take me to this Game", game_path(game), class: "nav-link"%>
+    </nav>
+      <!-- end of sidebar -->
+      <main role="main" class="col-md-9 ml-sm-auto col-lg-9 px-4 mt-5">
+        <div class="tab-content" id="nav-tabContent">
+          <div class="tab-pane fade  show active" id="list-overview" role="tabpanel" aria-labelledby="list-overview-list">
+            <h3>this is the overview page</h3>
+            <% if !current_user.username.nil? %>
+              <h5>Hi <%= current_user.username %></h5>
+            <% else %>
+              <h5>Hi Player</h5>
+            <% end %>
+            <br />
+            <div class="row">
+              <div class="col-6">
+                <div class="card bg-transparent border-0">
+                  <div class="card-body">
+                    <canvas id="doughnut-chart"></canvas>
+                  </div>
+                </div>
               </div>
+            </div>
+          </div>
+
+    <!---end of overview section-->
+          <div class="tab-pane fade" id="list-current" role="tabpanel" aria-labelledby="list-current-list">
+            <div class="row">
+              <% current_user.games.each do |game| %>
+                <div class="col-12 justify-content-center">
+                  <%# logic here for opponent id/username %>
+                  <p class="text-center"><%= game.state.capitalize %></p><br/>
+                  <span><%= link_to "Continue Playing", game_path(game), class: "nav-link"%></span>
+                </div>
+                <% end %>
+            </div>
+          </div>
+          <div class="tab-pane fade" id="list-played" role="tabpanel" aria-labelledby="list-played-list">
+            <div class="row">
+              <% current_user.games.each do |game| %>
+                <div class="col-12 justify-content-center">
+                  <%# logic here for opponent id/username %>
+                  <p><%= game.state.capitalize %></p>
+                  <span><%= link_to "Take me to this Game", game_path(game), class: "nav-link"%></span>
+                </div>
+                <% end %>
+            </div>
+          </div>
+          <div class="tab-pane fade" id="list-open" role="tabpanel" aria-labelledby="list-open-list">
+            <div class="row">
+              <% open_games.each do |game| %>
+                <div class="col-12 justify-content-center">
+                  <%# logic here for opponent id/username %>
+                  <p class="text-center"><%= game.state.capitalize %></p><br/>
+                  <span><%= link_to "Take me to this Game", game_path(game), class: "nav-link"%></span>
+                </div>
               <% end %>
+            </div>
+          </div>
+          <div class="tab-pane fade" id="list-won" role="tabpanel" aria-labelledby="list-played-won">
+            <div class="row">
+              <% won_games.each do |game| %>
+                <div class="col-12 col-sm-4 justify-content-center">
+                  <%# logic here for opponent id/username %>
+                  <p class="text-center"><%= game.state.capitalize %></p><br/>
+                  <span><%= link_to "Take me to this Game", game_path(game), class: "nav-link"%></span>
+                </div>
+              <% end %>
+            </div>
+          </div>
+          <div class="tab-pane fade" id="list-lost" role="tabpanel" aria-labelledby="list-lost-list">
+            <div class="row">
+              <% lost_games.each do |game| %>
+                <div class="col-12 col-sm-4 justify-content-center">
+                  <%# logic here for opponent id/username %>
+                  <p class="text-center"><%= game.state.capitalize %></p><br/>
+                  <span><%= link_to "Take me to this Game", game_path(game), class: "nav-link"%></span>
+                </div>
+              <% end %>
+            </div>
+          </div>
+          <div class="tab-pane fade" id="list-forfeited" role="tabpanel" aria-labelledby="list-forfeited-list">
+            <div class="row">
+              <% forfeited_games.each do |game| %>
+                <div class="col-12 col-sm-4 justify-content-center">
+                  <%# logic here for opponent id/username %>
+                  <p class="text-center"><%= game.state.capitalize %></p><br/>
+                  <span><%= link_to "Take me to this Game", game_path(game), class: "nav-link"%></span>
+                </div>
+              <% end %>
+            </div>
           </div>
         </div>
-        <div class="tab-pane fade" id="list-open" role="tabpanel" aria-labelledby="list-open-list">
-          <div class="row">
-            <% open_games.each do |game| %>
-              <div class="col-12 justify-content-center">
-                <%# logic here for opponent id/username %>
-                <p class="text-center"><%= game.state.capitalize %></p><br/>
-                <%= link_to "Take me to this Game", game_path(game), class: "nav-link"%>
-              </div>
-            <% end %>
-          </div>
-        </div>
-        <div class="tab-pane fade" id="list-won" role="tabpanel" aria-labelledby="list-played-won">
-          <div class="row">
-            <% won_games.each do |game| %>
-              <div class="col-12 col-sm-4 justify-content-center">
-                <%# logic here for opponent id/username %>
-                <p class="text-center"><%= game.state.capitalize %></p><br/>
-                <%= link_to "Take me to this Game", game_path(game), class: "nav-link"%>
-              </div>
-            <% end %>
-          </div>
-        </div>
-        <div class="tab-pane fade" id="list-lost" role="tabpanel" aria-labelledby="list-lost-list">
-          <div class="row">
-            <% lost_games.each do |game| %>
-              <div class="col-12 col-sm-4 justify-content-center">
-                <%# logic here for opponent id/username %>
-                <p class="text-center"><%= game.state.capitalize %></p><br/>
-                <%= link_to "Take me to this Game", game_path(game), class: "nav-link"%>
-              </div>
-            <% end %>
-          </div>
-        </div>
-        <div class="tab-pane fade" id="list-forfeited" role="tabpanel" aria-labelledby="list-forfeited-list">
-          <div class="row">
-            <% forfeited_games.each do |game| %>
-              <div class="col-12 col-sm-4 justify-content-center">
-                <%# logic here for opponent id/username %>
-                <p class="text-center"><%= game.state.capitalize %></p><br/>
-                <%= link_to "Take me to this Game", game_path(game), class: "nav-link"%>
-              </div>
-            <% end %>
-          </div>
-        </div>
-      </div>
+      </main>
     </div>
   </div>
-</div>
+
+
+<script>
+new Chart(document.getElementById("doughnut-chart"), {
+    type: 'doughnut',
+    data: {
+      labels: ["Currently Playing", "All Games Played", "Games Still Open", "Games Won", "Games Lost", "Games Forefeited"],
+      datasets: [
+        {
+          backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850", "#4AFFC3"],
+          data: [<%= open_games.count %>,<%= current_user.games.count %>,<%= open_games.count %>,<%= won_games.count %>,<%= lost_games.count %>,<%= forfeited_games.count %>]
+        }
+      ]
+    },
+    options: {
+      legend: {
+        display: false
+      }
+    }
+});
+</script>
