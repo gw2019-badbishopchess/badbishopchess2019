@@ -5,13 +5,13 @@
 
   <div class="GameSubHeader">
     <div class="WhitePlayerName">
-      <%= @game.white_player_id %>
+      White Player's Id: <%= @game.white_player_id %>
     </div>
 <% end %>
 
   <div class="BlackPlayerName">
     <% if @game.black_player_id.present? %>
-      <%= @game.black_player_id %>
+      Black Player's Id: <%= @game.black_player_id %>
     <% else %>
       <p> Waiting for Player... </p>
     <% end %>
@@ -21,9 +21,19 @@
 <body>
   <br/>
   <br/>
-  <br/>
-  <br/>
-  <br/>
+
+  <div class="castling">
+    <% if (!queenside_rook.nil? && legal_to_castle?(king_to_castle.x_coordinate - 2, king_to_castle.y_coordinate)) || (!kingside_rook.nil? && legal_to_castle?(king_to_castle.x_coordinate + 2, king_to_castle.y_coordinate)) %>
+
+      <% if !queenside_rook.nil? && legal_to_castle?(king_to_castle.x_coordinate - 2, king_to_castle.y_coordinate) %>
+        <%= link_to 'Your Queenside Rook', castling_piece_path(queenside_rook), class: 'btn btn-info btn-sm', method: :put %>
+      <% end %>
+      <br />
+      <% if !kingside_rook.nil? && legal_to_castle?(king_to_castle.x_coordinate + 2, king_to_castle.y_coordinate) %>
+        <%= link_to 'Your Kingside Rook', castling_piece_path(kingside_rook), class: 'btn btn-info btn-sm', method: :put %>
+      <% end %>
+    <% end %>
+  </div> 
 
 <div class="chessboard col-6">
   <table>
@@ -60,3 +70,43 @@
       <% end %>
   </div>
 </body>
+
+<script>
+$(document).ready($(function() {
+    $('.piece').draggable({ 
+        snap: 'droppable',
+        revert: 'invalid'
+      });
+    $('.droppable').droppable({
+        drop: function(event, ui) {
+          let piece = ui.draggable
+          let destination_square = $(this);
+          var update_piece = {
+            id: piece.data('id'),
+            game_id: piece.data('game-id'),
+            x_coordinate: destination_square.data('x-coord'),
+            y_coordinate: destination_square.data('y-coord')
+          }
+          $.ajax({
+            type: 'PUT',
+            url: `/pieces/${update_piece.id}`,
+            // beforeSend: function(xhr) { xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content')) },
+            dataType: 'json',
+            data: {
+              piece: {
+                game_id: update_piece.game_id, 
+                id: update_piece.id,
+                x_coordinate: update_piece.x_coordinate,
+                y_coordinate: update_piece.y_coordinate
+              },
+            },
+            success: function(data) {
+              destination_square.empty();
+              location.reload(true);
+            }
+          });
+        }  
+      });    
+      
+    }));
+</script>

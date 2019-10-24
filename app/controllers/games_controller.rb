@@ -11,14 +11,8 @@ class GamesController < ApplicationController
   end
 
   def show
-<<<<<<< HEAD
-    @game = Game.find(params[:id])
-    @pieces = @game.pieces.find(params[:id])
-=======
     @game = Game.find_by_id(params[:id])
     @pieces = @game.pieces
-    @king = current_user.pieces.where(type: 'King').first
->>>>>>> 8798c0ef58681d4603a41e0a6be835592527552f
   end
 
   def index
