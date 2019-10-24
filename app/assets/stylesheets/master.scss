@@ -19,20 +19,6 @@ h1, .h1 {
   margin: 11% 0% 0% 0%;
 }
 
-// .index-subtitle {
-//   text-align: center;
-// }
-
-// .column-left {
-//   width: 50%;
-//   padding: 0% 0% 0% 40%;
-// }
-
-// .column-right {
-//   width: 50%;
-//   padding: 0.5% 40% 0% 0%;
-// }
-
 .row:after {
   content: "";
   display: table;
@@ -42,6 +28,9 @@ h1, .h1 {
 .navbar {
   font-family: 'Noto Sans', sans-serif;
   box-shadow: 0 0.25rem 0.125rem 0 rgba(0,0,0,0.05);
+  z-index: 1071;
+  position: sticky;
+  top: 0;
 }
 
 .bg-light {
@@ -110,4 +99,8 @@ tr:nth-child(odd) td:nth-child(even), tr:nth-child(even) td:nth-child(odd) {
 
 .ui-droppable-hover {
   border: red;
+}
+
+.list-group-item {
+  border: none !important; 
 }
