@@ -11,8 +11,11 @@ class PiecesController < ApplicationController
   def update
     @piece = Piece.find(params[:id])
     @game = @piece.game
-    @piece.move_to!(piece_params)
-    redirect_to game_path(@game)
+    if @piece.move_to!(piece_params)
+    else 
+      flash[:danger] = "You have made an illegel move!"
+    end
+    flash[:danger] = "The King is in Check!" if @piece.check_to_king? 
   end
 
   def create
@@ -28,17 +31,20 @@ class PiecesController < ApplicationController
     @rook = Piece.find(params[:id])
     @game = @rook.game
     @king = @game.pieces.where(type: 'King', user_id: current_user.id).first
-    @king.castle(castling_x_coord)
+    if @king.can_castle?(castling_x_coord, @king.y_coordinate)
+      @king.castle(castling_x_coord, @king.y_coordinate)
+    else flash[:danger] = 'You cannot castle.'
+    end
     redirect_to game_path(@game)
   end
 
   private
 
   def castling_x_coord
-    params[:x_coordinate] == 1 ? 3 : 7
+    @rook.x_coordinate == 1 ? 3 : 7
   end
 
   def piece_params
-    params.require(:piece).permit(:x_coordinate, :y_coordinate, :captured, :user_id, :game_id, :white_player_id, :black_player_id, :type, :game)
+    params.require(:piece).permit(:id, :x_coordinate, :y_coordinate, :captured, :user_id, :game_id, :white_player_id, :black_player_id, :type)
   end
 end
