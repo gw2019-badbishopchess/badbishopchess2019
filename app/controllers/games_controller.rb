@@ -13,7 +13,6 @@ class GamesController < ApplicationController
   def show
     @game = Game.find_by_id(params[:id])
     @pieces = @game.pieces
-    @king = current_user.pieces.where(type: 'King').first
   end
 
   def index

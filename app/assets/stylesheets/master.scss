@@ -1,4 +1,5 @@
 @import "bootstrap";
+@import url('https://fonts.googleapis.com/css?family=Noto+Sans|Open+Sans&display=swap');
 
 .badBishop {
   background-color: #feda6a;
@@ -80,7 +81,7 @@ tr:nth-child(odd) td:nth-child(even), tr:nth-child(even) td:nth-child(odd) {
   text-align: center;
   font-family: 'Noto Sans', sans-serif;
   font-size: 2.5rem;
-  margin-top: 7%;
+  margin-top: 2%;
 }
 
 .GameSubHeader:after {
@@ -109,10 +110,4 @@ tr:nth-child(odd) td:nth-child(even), tr:nth-child(even) td:nth-child(odd) {
 
 .ui-droppable-hover {
   border: red;
-}
-
-img {
-  size: 35px;
-  size: 35px;
-  align: center;
 }

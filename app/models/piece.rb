@@ -45,6 +45,7 @@ class Piece < ApplicationRecord
       end
     end
     
+    
     # checks leftward horizontal if occupied
     if path == 'horizontal' && x1 > x2
       (x1 - 1).downto(x2 + 1) do |x|
@@ -91,8 +92,9 @@ class Piece < ApplicationRecord
 
     # throws runtime error if not straight line 
     # returns false if straight slope is unoccupied
-    if @slope.abs != 1.0
-      fail 'path is not a straight line'
+    if @slope.abs != 1.0 && self.type != "Knight"
+      # flash[:danger] = "This move is not a straight line and is invalid"
+      # fail 'path is not a straight line'
     else return false
     end
 
@@ -104,10 +106,10 @@ class Piece < ApplicationRecord
     if game.pieces.find_by(x_coordinate: x_end, y_coordinate: y_end) != nil
       piece = game.pieces.find_by(x_coordinate: x_end, y_coordinate: y_end)
         if piece.color_white == true && self.user_id == game.white_player_id || piece.color_white == false && self.user_id == game.black_player_id
-          puts "Error: Obstructed by Own Piece!"
-          render plain: "Error: Obstructed by Own Piece"
+          # render plain: "Error: Obstructed by Own Piece"
+          return true
         else
-          remove_piece(piece)
+          remove_piece(piece) 
           return false
         end
     end
@@ -119,23 +121,23 @@ class Piece < ApplicationRecord
   end
 
   def move_to!(piece_params)
-    if self.type == 'King' && self.can_castle?(piece_params[:x_coordinate])
-      self.castle(piece_params[:x_coordinate])
-      return
+    if self.type == 'King' && self.can_castle?(piece_params[:x_coordinate], piece_params[:y_coordinate]) == true
+      self.castle(piece_params[:x_coordinate], piece_params[:y_coordinate])
+      return true
     end
-    if self.is_valid?(piece_params[:x_coordinate], piece_params[:y_coordinate]) == true && self.contains_own_piece?(piece_params[:x_coordinate], piece_params[:y_coordinate]) == false
-      self.update_attributes(x_coordinate: piece_params[:x_coordinate], y_coordinate: piece_params[:y_coordinate])
-    else
-      flash[:alert] = "This is not a valid move"
-    end
-    if self.check_to_king?
-      flash[:alert] = "Error: Check to the King!" 
-    end
+    return false unless self.is_valid?(piece_params[:x_coordinate], piece_params[:y_coordinate]) == true
+    return false unless self.contains_own_piece?(piece_params[:x_coordinate], piece_params[:y_coordinate]) == false 
+    return false if self.is_obstructed?([piece_params[:x_coordinate], piece_params[:y_coordinate]]) == true && self.type != 'Knight'
+    return true if self.update_attributes(x_coordinate: piece_params[:x_coordinate], y_coordinate: piece_params[:y_coordinate], piece_move_count: (piece_move_count + 1))
   end
+
 
     #this will see if the move from the piece is diagonal? will return true if it diagonal
   def diagonal_move?(x, y)
-    return true if (x_coordinate - x.to_i).abs == (y_coordinate - y.to_i).abs && (x_coordinate != x.to_i)
+    if (x_coordinate - x.to_i).abs == (y_coordinate - y.to_i).abs && (x_coordinate != x.to_i)
+      return true
+    else return false
+    end
   end
 
   #this figures out the distane of the x axis
@@ -157,14 +159,12 @@ class Piece < ApplicationRecord
     white_king = game.pieces.where(color_white: true, type: "King").first
     black_king = game.pieces.where(color_white: false, type: "King").first
     game.pieces.each do | piece |
-      if piece.x_coordinate != nil && piece.is_valid?(white_king.x_coordinate, white_king.y_coordinate)
-        return true
-      elsif piece.x_coordinate != nil && piece.is_valid?(black_king.x_coordinate, black_king.y_coordinate)
-        return true
-      else
-        return false
-      end
+      return true if piece.color_white == false && piece.x_coordinate != nil && piece.is_valid?(white_king.x_coordinate, white_king.y_coordinate) && 
+        (piece.is_obstructed?([white_king.x_coordinate, white_king.y_coordinate]) == false && self.type != 'Knight')
+      return true if piece.color_white == true && piece.x_coordinate != nil && piece.is_valid?(black_king.x_coordinate, black_king.y_coordinate) && 
+        (piece.is_obstructed?([black_king.x_coordinate, black_king.y_coordinate]) == false && self.type != 'Knight')
     end
+    return false
   end
 
 end
