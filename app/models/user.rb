@@ -24,7 +24,7 @@ class User < ApplicationRecord
     Pusher.trigger('activity', 'login', self.as_json)
   end
 
-  def as_json(options={}) # add this method
+  def as_json(options={}) 
     super(
       only: [:id, :email, :username]
     )
