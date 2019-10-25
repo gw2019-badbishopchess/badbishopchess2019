@@ -96,3 +96,4 @@ end
 gem 'jquery-ui-rails'
 # to get charts in dashboard
 gem 'chart-js-rails'
+gem 'pusher'
