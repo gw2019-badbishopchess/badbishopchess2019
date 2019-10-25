@@ -20,8 +20,8 @@ class User < ApplicationRecord
     end      
   end
 
-  def notify_pusher
-    Pusher.trigger('activity', 'login', self.as_json)
+  def notify_pusher 
+        Pusher.trigger('activity', 'login', self.as_json)
   end
 
   def as_json(options={}) 
