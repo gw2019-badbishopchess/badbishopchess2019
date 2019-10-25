@@ -37,8 +37,9 @@ class GamesController < ApplicationController
   end
 
   def forfeit
-    @game = Game.find_by_id(params[:id])
-    redirect_to root_path
+    @games = Game.find_by_id(params[:id])
+    @games.update_attributes(game_params)
+    redirect_to games_path
   end
 
   private
