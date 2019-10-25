@@ -60,12 +60,14 @@
         
           <% if current_user.id == @game.white_player_id %>
             <%= simple_form_for @game, url: forfeit_game_path(@game) do |f| %>
-              <%= f.input :winning_user_id, as: :hidden, :input_html => { :value => @game.black_player_id } %>
+              <%= f.hidden_field 'winning_user_id', value: @game.black_player_id %>
+              <%= f.hidden_field 'state', value: 'forfeit' %>
               <span class="float-right"><%= f.submit "Forfeit", class: "btn btn-danger btn-lg" %></span>
             <% end %>
           <% else %>
             <%= simple_form_for @game, url: forfeit_game_path(@game) do |f| %>
-              <%= f.input :winning_user_id, as: :hidden, :input_html => { :value => @game.white_player_id } %>
+              <%= f.hidden_field 'winning_user_id', value: @game.white_player_id %>
+              <%= f.hidden_field 'state', value: 'forfeit' %>
               <span class="float-right"><%= f.submit "Forfeit", class: "btn btn-danger btn-lg" %></span>
             <% end %>
           <% end %>

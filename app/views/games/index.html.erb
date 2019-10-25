@@ -7,12 +7,14 @@
         <%= simple_form_for game, url: join_game_path(game) do |f| %>
           <h6 class="text-center"><%= "Opponent: #{game.white_player_id}" %> </h6>
             <%= f.input :black_player_id, as: :hidden, :input_html => { :value => current_user.id } %>
+            <%= f.hidden_field 'state', value: 'in progress' %>
             <span class="IndexJoinGame"><%= f.submit "Join as Black Player", class: "btn btn-primary"%></span> 
         <% end %>
       <% elsif game.white_player_id.blank?  %>
         <%= simple_form_for game, url: join_game_path(game) do |f| %>
           <h6 class="text-center"><%= "Opponent: #{game.black_player_id}" %> </h6>
             <%= f.input :white_player_id, as: :hidden, :input_html => { :value => current_user.id } %>
+            <%= f.hidden_field 'state', value: 'in progress' %>
             <span class="IndexJoinGame"><%= f.submit "Join as White Player", class: "btn btn-primary"%></span> 
         <% end %>
       <% end %>
