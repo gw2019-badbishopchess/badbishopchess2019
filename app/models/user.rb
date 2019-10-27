@@ -1,7 +1,7 @@
 class User < ApplicationRecord
   has_many :pieces # Creating user to pieces association
   has_many :games # Creating user to games association
-  validates :username, presence: :true, uniqueness: { case_sensitive: false } # for pusher - messaging
+  validates :username, presence: true, uniqueness: { case_sensitive: false } # for pusher - messaging
   validates :is_signed_in, inclusion: [true, false] # for pusher - user presense
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
