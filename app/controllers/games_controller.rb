@@ -13,11 +13,11 @@ class GamesController < ApplicationController
   def show
     @game = Game.find_by_id(params[:id])
     @pieces = @game.pieces
+    @chat = Chat.new
   end
 
   def index
     @unmatched_games = Game.where(:state => 'open')
-
   end
 
   def update
