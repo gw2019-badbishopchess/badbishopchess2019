@@ -37,13 +37,14 @@ class GamesController < ApplicationController
   end
 
   def forfeit
-    @game = Game.find_by_id(params[:id])
-    redirect_to root_path
+    @games = Game.find_by_id(params[:id])
+    @games.update_attributes(game_params)
+    redirect_to games_path
   end
 
   private
 
   def game_params
-    params.require(:game).permit(:name, :user_id, :white_player_id, :black_player_id)
+    params.require(:game).permit(:name, :user_id, :white_player_id, :black_player_id, :state, :winning_user_id)
   end
 end
