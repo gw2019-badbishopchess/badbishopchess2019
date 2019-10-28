@@ -19,4 +19,5 @@ class Users::SessionsController < Devise::SessionsController
       def notify_pusher(activity_type)
         Pusher.trigger('activity', activity_type, current_user.as_json)
       end
+
 end

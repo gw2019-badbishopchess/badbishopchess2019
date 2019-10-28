@@ -1,5 +1,4 @@
 require 'pusher'
-require 'chatkit'
 
 Pusher.app_id = ENV["PUSHER_APP_ID"]
 Pusher.key = ENV["PUSHER_KEY"]

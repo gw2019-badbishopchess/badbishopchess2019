@@ -18,6 +18,7 @@ Rails.application.routes.draw do
       put :castling
     end
   end
+  resources :chats
   root 'static_pages#index' #added for homepage
 
 end

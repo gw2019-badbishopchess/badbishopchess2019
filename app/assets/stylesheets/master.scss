@@ -28,7 +28,6 @@ h1, .h1 {
 .navbar {
   font-family: 'Noto Sans', sans-serif;
   box-shadow: 0 0.25rem 0.125rem 0 rgba(0,0,0,0.05);
-  z-index: 1071;
   position: sticky;
   top: 0;
 }
@@ -222,3 +221,54 @@ width: 0.3rem;
 .left::-webkit-scrollbar-thumb {
 background: #fff3; 
 }
+
+// chatroom
+.chat-room {
+  height: 100%;
+  font-size: 0.85rem;
+  // font-size: 50% !important;
+}
+
+.chat-message, .chat-message-username {
+  font-size: 0.85rem;
+  margin-bottom: 2px !important;
+}
+
+.chat-room.card-body {
+  overflow: scroll;
+  
+}
+
+.chat-type {
+  font-size: 0.85rem;
+}
+
+
+// chatroom from pusher
+.full-height {
+  height: 100vh;
+  overflow: hidden;
+}
+
+input.form-control.sidebar-form {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  border: 0;
+  border-radius: 0;
+}
+
+.chat-box {
+  height: 94vh;
+  overflow: scroll;
+}
+
+.chat {
+  border-radius: 3px;
+  padding: 0rem 2rem 0 1rem;
+}
+
+.chat-username {
+  font-size: 0.7rem;
+}
+

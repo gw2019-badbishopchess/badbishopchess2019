@@ -2,6 +2,7 @@ class User < ApplicationRecord
   has_many :pieces # Creating user to pieces association
   has_many :games # Creating user to games association
   has_many :chats # assoication for chatting agmounst users
+  has_many :chatrooms
   validates :username, presence: true, uniqueness: { case_sensitive: false } # for pusher - messaging
   validates :is_signed_in, inclusion: [true, false] # for pusher - user presense
   # Include default devise modules. Others available are:
@@ -23,7 +24,13 @@ class User < ApplicationRecord
   end
 
   def notify_pusher 
-        Pusher.trigger('activity', 'login', self.as_json)
+    Pusher.trigger('activity', 'login', self.as_json)
+  end
+
+  def auth_user_chatkit
+    auth_data = chatkit.authenticate({
+      user_id: "#{self.id}"
+    })
   end
 
   def as_json(options={}) 

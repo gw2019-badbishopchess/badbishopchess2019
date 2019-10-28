@@ -1,12 +1,22 @@
 class Game < ApplicationRecord
   has_many :pieces # Creating game to pieces association
   belongs_to :user # Creating game to users association
+  has_one :chatroom
 
   scope :available, -> { where state: 'open' } # to help find which games are available
   after_create :populate_board!
+  after_create :create_chat
 
   def render_piece(x_coord, y_coord)
     pieces.where('(x_coordinate = ? AND y_coordinate = ?)', x_coord, y_coord)
+  end
+
+  def create_chat
+    Chatroom.create(game_id: id, creator_id: user_id)
+    Chatkit::Client.new({
+      instance_locator: 'ENV['CHATKIT_LOCATOR']',
+      key: 'ENV['CHATKIT_CHAT_SECRET_KEY']'
+    })
   end
 
   def populate_board!

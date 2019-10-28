@@ -1,17 +1,17 @@
-<% if @game.present? %>
   <div class="GameHeader">
     <%= @game.name %>
   </div>
 
-  <div class="GameSubHeader">
-    <div class="WhitePlayerName">
-      White Player's Id: <%= @game.white_player_id %>
-    </div>
-<% end %>
+<div class="row">
+  <div class="GameCurrentUserHeader col-6 text-center">
+    <h6>My username: <%= current_user.username %></h6>
+    <h6>I am playing for <%= user_game_piece_color %></h6>
+  </div>
 
-  <div class="BlackPlayerName">
-    <% if @game.black_player_id.present? %>
-      Black Player's Id: <%= @game.black_player_id %>
+  <div class="GameOpponentHeader col-5 text-center">
+    <% if opponent.present? %>
+      <h6>My Opponent: <%= opponent.username %></h6>
+      <h6>They are <%= opponent_game_piece_color %></h6>
     <% else %>
       <p> Waiting for Player... </p>
     <% end %>
@@ -34,27 +34,45 @@
     <% end %>
   </div> 
 
-  <div class="chessboard col-6">
-    <table>
-      <tbody>
-          <% (1..8).each do |y_coord| %>
-            <tr id = <%= y_coord %>>
-              <% (1..8).each do |x_coord| %>
-                <td data-x-coord= <%= x_coord %> data-y-coord= <%= y_coord %> 
-                    class = droppable 
-                    <%= "#{(y_coord % 2 == x_coord % 2 ? "white-square droppable-square" : "black-square droppable-square")}" %> >
-                      <% if boardpiece = @pieces.where("(x_coordinate = ? AND y_coordinate = ?)", x_coord, y_coord).first %>
-                        <span class= "piece" data-id=<%= boardpiece.id %> id="<%= boardpiece.id %>" data-x-coord= <%= x_coord %> data-y-coord= <%= y_coord %> >
-                          <%= image_tag boardpiece.image %>
-                        </span> 
-                      <% end %>
-                </td>
-              <% end %>
-            </tr>
-          <% end %>
-      </tbody>
-    </table>
+  <div class="row">
+    <div class="chessboard col-6">
+      <table>
+        <tbody>
+            <% (1..8).each do |y_coord| %>
+              <tr id = <%= y_coord %>>
+                <% (1..8).each do |x_coord| %>
+                  <td data-x-coord= <%= x_coord %> data-y-coord= <%= y_coord %> 
+                      class = droppable 
+                      <%= "#{(y_coord % 2 == x_coord % 2 ? "white-square droppable-square" : "black-square droppable-square")}" %> >
+                        <% if boardpiece = @pieces.where("(x_coordinate = ? AND y_coordinate = ?)", x_coord, y_coord).first %>
+                          <span class= "piece" data-id=<%= boardpiece.id %> id="<%= boardpiece.id %>" data-x-coord= <%= x_coord %> data-y-coord= <%= y_coord %> >
+                            <%= image_tag boardpiece.image %>
+                          </span> 
+                        <% end %>
+                  </td>
+                <% end %>
+              </tr>
+            <% end %>
+        </tbody>
+      </table>
+    </div>
+
+
+
+  <div class="col-5">
+    <button type="button" class="btn btn-dark" id="chatroom-btn" >click for chatbox</button>
+    <div class="card chat-room d-flex flex-column">
+      <div class="card-body chat-room">
+        <p class="chat-message-username">username</p>
+        <p class="chat-message">chat message</p>
+      </div>
+      <div class="card-footer chat-type text-muted d-flex align-items-end">
+       
+      </div>
+    </div>
   </div>
+
+  
   <div>
      <% if @game.black_player_id.present? && @game.white_player_id.present? %>
         
@@ -113,5 +131,30 @@ $(document).ready($(function() {
       });    
       
     }));
+</script>
+
+<script>
+$(document).ready($(function() { 
+    const chatroom = <%= @game.chatroom %>;
+    const game = <%= @game %>;
+    const user = <%= current_user %>;
+    const roomId =  
+    const tokenProvider = new Chatkit.TokenProvider({
+      url: "https://us1.pusherplatform.io/services/chatkit_token_provider/v1/5baa95b9-a7de-40a9-ac6d-46b5d5f40d06/token"
+    });
+    const chatManager = new ChatKit.ChatManger({
+      instance_locator: "ENV['CHATKIT_LOCATOR']",
+      key: "ENV['CHATKIT_CHAT_SECRET_KEY']",
+      tokenProvider: tokenProvider
+    });
+
+    chatManager.connect()
+      .then()
+
+}));
+  // 1. if button is clicked - make a new room with users of the game
+  // 2. if room exists button goes away and the chatbox appears with users
+  // 3. then chat can begin
+
 </script>
 
