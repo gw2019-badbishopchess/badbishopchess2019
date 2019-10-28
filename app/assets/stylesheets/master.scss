@@ -30,6 +30,7 @@ h1, .h1 {
   box-shadow: 0 0.25rem 0.125rem 0 rgba(0,0,0,0.05);
   position: sticky;
   top: 0;
+  z-index: 1200;
 }
 
 .bg-light {
@@ -239,36 +240,7 @@ background: #fff3;
   
 }
 
-.chat-type {
+#chat-input {
   font-size: 0.85rem;
-}
-
-
-// chatroom from pusher
-.full-height {
-  height: 100vh;
-  overflow: hidden;
-}
-
-input.form-control.sidebar-form {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  border: 0;
-  border-radius: 0;
-}
-
-.chat-box {
-  height: 94vh;
-  overflow: scroll;
-}
-
-.chat {
-  border-radius: 3px;
-  padding: 0rem 2rem 0 1rem;
-}
-
-.chat-username {
-  font-size: 0.7rem;
 }
 

@@ -13,7 +13,8 @@ class GamesController < ApplicationController
   def show
     @game = Game.find_by_id(params[:id])
     @pieces = @game.pieces
-    @chatroom = @game.chatroom
+    @chat = Chat.new
+    @chats = Chat.all
   end
 
   def index

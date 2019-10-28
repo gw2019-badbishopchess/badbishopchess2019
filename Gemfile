@@ -62,6 +62,7 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 # Installs devise
 gem 'devise'
+gem 'devise-jwt', '~> 0.5.9'
 
 # Installs jquery
 gem 'jquery-rails'

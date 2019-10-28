@@ -9,8 +9,10 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable,
+         :jwt_authenticatable, jwt_revocation_strategy: JWTBlacklist
+         
          #:omniauthable, :omniauth_providers => [:facebook, :twitter] #this added the omni links in routes
-          :omniauthable, :omniauth_providers => [:facebook, :twitter, :google_oauth2]
+          # :omniauthable, :omniauth_providers => [:facebook, :twitter, :google_oauth2]
   after_create :notify_pusher
 
 

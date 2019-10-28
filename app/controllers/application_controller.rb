@@ -1,17 +1,36 @@
 class ApplicationController < ActionController::Base
-  protect_from_forgery with: :exception
-  before_action :configure_permitted_parameters, if: :devise_controller?
-  before_action :authenticate_user!
+  rescue_from ActiveRecord::RecordNotFound, with: :file_not_found
   
-  protected
-
-  def configure_permitted_parameters
-    added_attrs = [:username, :email, :password, :password_confirmation, :remember_me]
-    devise_parameter_sanitizer.permit :sign_up, keys: added_attrs
-    devise_parameter_sanitizer.permit :account_update, keys: added_attrs
+  def render_resource(resource)
+    if resource.errors.empty?
+      render json: resource
+    else
+      validation_error(resource)
+    end
   end
+
+  def validation_error(resource)
+    render json: {
+      errors: [
+        {
+          status: '400',
+          title: 'Bad Request',
+          detail: resource.errors,
+          code: '100'
+        }
+      ]
+    }, status: :bad_request
+  end
+
+  def file_not_found()
+    head 404
+  end
+
+  protected
 
   def after_sign_in_path_for(resource)
     request.env['omniauth.origin'] || root_path
   end
+
+  
 end

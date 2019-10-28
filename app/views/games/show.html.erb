@@ -60,14 +60,21 @@
 
 
   <div class="col-5">
-    <button type="button" class="btn btn-dark" id="chatroom-btn" >click for chatbox</button>
+    <%# <button type="button" class="btn btn-dark" id="chatroom-btn" >click for chatbox</button> %>
     <div class="card chat-room d-flex flex-column">
       <div class="card-body chat-room">
-        <p class="chat-message-username">username</p>
-        <p class="chat-message">chat message</p>
+        <div class="messages-chatroom">
+          <% @game.chats.each do |chat| %>
+            <div class="col-12">
+              <small class="chat-message username"><%= chat.username %></small>
+              <p class="chat-message"><%= chat.message %></p>
+              <hr />
+            </div>
+          <% end %>
+        </div>
       </div>
-      <div class="card-footer chat-type text-muted d-flex align-items-end">
-       
+      <div class="card-footer text-muted d-flex align-items-end" id="chat-form">
+        <input type="text" class="form-control" id="chat-input" username="<%= current_user.username %>" user="<%= current_user.id %>" gameid="<%= @game.id %>" placeholder="Chat here!">
       </div>
     </div>
   </div>
@@ -132,29 +139,41 @@ $(document).ready($(function() {
       
     }));
 </script>
-
-<script>
+<script>  
 $(document).ready($(function() { 
-    const chatroom = <%= @game.chatroom %>;
-    const game = <%= @game %>;
-    const user = <%= current_user %>;
-    const roomId =  
-    const tokenProvider = new Chatkit.TokenProvider({
-      url: "https://us1.pusherplatform.io/services/chatkit_token_provider/v1/5baa95b9-a7de-40a9-ac6d-46b5d5f40d06/token"
-    });
-    const chatManager = new ChatKit.ChatManger({
-      instance_locator: "ENV['CHATKIT_LOCATOR']",
-      key: "ENV['CHATKIT_CHAT_SECRET_KEY']",
-      tokenProvider: tokenProvider
-    });
-
-    chatManager.connect()
-      .then()
-
+  $('#chat-input').keypress(function(event) {
+    if (event.which == 13 ) {
+      const message = event.target.value;
+      const username = $(this).attr('username');
+      const game_id = $(this).attr('gameid');
+      const user_id = $(this).attr('user');
+      $.ajax({
+          type: 'POST',
+          url: `/chats`,
+          dataType: 'json',
+          data: {
+            chat: {
+              message: message,
+              username: username,
+              game_id: game_id,
+              user_id: user_id 
+            },
+          },
+          success: function(data) {
+            $('#chat-input').val("");
+          }
+      })
+      var pusher = new Pusher('<%= ENV["PUSHER_KEY"] %>', {
+        cluster: '<%= ENV["PUSHER_CLUSTER"] %>'
+        }
+      );
+      var channel = pusher.subscribe('chat');
+      channel.bind('new', function(data) {
+        var htmlAdd = `<div class="col-12"><small class="chat-message username">${username}</small><p class="chat-message">${message}</p><hr /></div>`
+        $('.messages-chatroom').append(htmlAdd)
+      })
+    }
+  })
 }));
-  // 1. if button is clicked - make a new room with users of the game
-  // 2. if room exists button goes away and the chatbox appears with users
-  // 3. then chat can begin
-
 </script>
 
