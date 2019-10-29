@@ -1,0 +1,172 @@
+  <div class="GameHeader">
+    <%= @game.name %>
+  </div>
+
+<div class="row">
+  <div class="GameCurrentUserHeader col-6 text-center">
+    <h6>My username: <%= current_user.username %></h6>
+    <h6>I am playing for <%= user_game_piece_color %></h6>
+  </div>
+
+  <div class="GameOpponentHeader col-5 text-center">
+    <% if opponent.present? %>
+      <h6>My Opponent: <%= opponent.username %></h6>
+      <h6>They are <%= opponent_game_piece_color %></h6>
+    <% else %>
+      <p> Waiting for Player... </p>
+    <% end %>
+  </div>
+</div>
+
+<body>
+  <br/>
+  <br/>
+  <div class="castling">
+    <% if (!queenside_rook.nil? && legal_to_castle?(king_to_castle.x_coordinate - 2, king_to_castle.y_coordinate)) || (!kingside_rook.nil? && legal_to_castle?(king_to_castle.x_coordinate + 2, king_to_castle.y_coordinate)) %>
+
+      <% if !queenside_rook.nil? && legal_to_castle?(king_to_castle.x_coordinate - 2, king_to_castle.y_coordinate) %>
+        <%= link_to 'Your Queenside Rook', castling_piece_path(queenside_rook), class: 'btn btn-info btn-sm', method: :put %>
+      <% end %>
+      <br />
+      <% if !kingside_rook.nil? && legal_to_castle?(king_to_castle.x_coordinate + 2, king_to_castle.y_coordinate) %>
+        <%= link_to 'Your Kingside Rook', castling_piece_path(kingside_rook), class: 'btn btn-info btn-sm', method: :put %>
+      <% end %>
+    <% end %>
+  </div> 
+
+  <div class="row">
+    <div class="chessboard col-6">
+      <table>
+        <tbody>
+            <% (1..8).each do |y_coord| %>
+              <tr id = <%= y_coord %>>
+                <% (1..8).each do |x_coord| %>
+                  <td data-x-coord= <%= x_coord %> data-y-coord= <%= y_coord %> 
+                      class = droppable 
+                      <%= "#{(y_coord % 2 == x_coord % 2 ? "white-square droppable-square" : "black-square droppable-square")}" %> >
+                        <% if boardpiece = @pieces.where("(x_coordinate = ? AND y_coordinate = ?)", x_coord, y_coord).first %>
+                          <span class= "piece" data-id=<%= boardpiece.id %> id="<%= boardpiece.id %>" data-x-coord= <%= x_coord %> data-y-coord= <%= y_coord %> >
+                            <%= image_tag boardpiece.image %>
+                          </span> 
+                        <% end %>
+                  </td>
+                <% end %>
+              </tr>
+            <% end %>
+        </tbody>
+      </table>
+    </div>
+
+
+
+  <div class="col-5">
+    <%# <button type="button" class="btn btn-dark" id="chatroom-btn" >click for chatbox</button> %>
+    <div class="card chat-room d-flex flex-column">
+      <div class="card-body chat-room">
+        <div class="message-chatroom">
+          <% @game.chats.each do |chat| %>
+            <div class="col-12 chat-bubble">
+              <small class="chat-message username"><%= chat.username %></small>
+              <p class="chat-message"><%= chat.message %></p>
+              <hr />
+            </div>
+          <% end %>
+        </div>
+      </div>
+      <div class="card-footer text-muted">
+        <%= simple_form_for @chat,  
+                                    html: {  id: "chat-form" },
+                                    input_html: { "data-type" => :json } do |f| %>
+          <%= f.hidden_field 'username', value: current_user.username %>
+          <%= f.hidden_field 'game_id', value: @game.id %>
+          <%= f.hidden_field 'user_id', value: current_user.id %>
+          <%= f.input 'message', label: "Chat" %>
+            <%= f.button :submit, "Chat", class: "btn-danger" %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  
+  <div>
+     <% if @game.black_player_id.present? && @game.white_player_id.present? %>
+        
+          <% if current_user.id == @game.white_player_id %>
+            <%= simple_form_for @game, url: forfeit_game_path(@game) do |f| %>
+              <%= f.hidden_field 'winning_user_id', value: @game.black_player_id %>
+              <%= f.hidden_field 'state', value: 'forfeit' %>
+              <span class="float-right"><%= f.submit "Forfeit", class: "btn btn-danger btn-lg" %></span>
+            <% end %>
+          <% else %>
+            <%= simple_form_for @game, url: forfeit_game_path(@game) do |f| %>
+              <%= f.hidden_field 'winning_user_id', value: @game.white_player_id %>
+              <%= f.hidden_field 'state', value: 'forfeit' %>
+              <span class="float-right"><%= f.submit "Forfeit", class: "btn btn-danger btn-lg" %></span>
+            <% end %>
+          <% end %>
+      <% end %>
+  </div>
+</body>
+
+<script>
+$(document).ready($(function() {
+    $('.piece').draggable({ 
+        snap: 'droppable',
+        revert: 'invalid'
+      });
+    $('.droppable').droppable({
+        drop: function(event, ui) {
+          let piece = ui.draggable
+          let destination_square = $(this);
+          var update_piece = {
+            id: piece.data('id'),
+            game_id: piece.data('game-id'),
+            x_coordinate: destination_square.data('x-coord'),
+            y_coordinate: destination_square.data('y-coord')
+          }
+          $.ajax({
+            type: 'PUT',
+            url: `/pieces/${update_piece.id}`,
+            // beforeSend: function(xhr) { xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content')) },
+            dataType: 'json',
+            data: {
+              piece: {
+                game_id: update_piece.game_id, 
+                id: update_piece.id,
+                x_coordinate: update_piece.x_coordinate,
+                y_coordinate: update_piece.y_coordinate
+              },
+            },
+            success: function(data) {
+              destination_square.empty();
+              location.reload(true);
+            }
+          });
+        }  
+      });    
+      
+    }));
+</script>
+<script>  
+$(document).ready($(function() { 
+   $('#chat-form input').keypress(function(event) {
+    if (event.which == 13) {
+        event.preventDefault();
+        $("#chat-form").submit();
+    }
+    var pusher = new Pusher('<%= ENV["PUSHER_KEY"] %>', {
+      cluster: '<%= ENV["PUSHER_CLUSTER"] %>'
+      }
+    );
+    var channel = pusher.subscribe('chat');
+    channel.bind('new', function(data) {
+      var htmlAdd = `<div class="col-12"><small class="chat-message username">${username}</small><p class="chat-message">${message}</p><hr /></div>`;
+      return $('.message-chatroom').append(htmlAdd);
+    })
+  })
+
+
+
+ 
+</script>
+
