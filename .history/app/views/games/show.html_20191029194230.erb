@@ -79,7 +79,7 @@
           <%= f.hidden_field 'game_id', value: @game.id %>
           <%= f.hidden_field 'user_id', value: current_user.id %>
           <%= f.input 'message', label: "Chat", id: "input-chat-message"%>
-          <%= f.button :submit, "Chat", class: "btn-danger", id: "submit-chat" %>
+            <%= f.button :submit, "Chat", class: "btn-danger", id: "submit-chat" %>
         <% end %>
       </div>
     </div>

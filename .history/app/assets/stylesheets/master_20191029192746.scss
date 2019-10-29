@@ -248,6 +248,41 @@ background: #fff3;
   font-size: 0.55rem;
 }
 
-.speech-bubble {
+.bp-speech-bubble {
+	position: relative;
+	background: #c8caca;
+  border-radius: .4em;
+  padding: auto
+}
+
+.bp-speech-bubble:after {
+  content: '';
+	position: absolute;
+	right: 0;
+	top: 50%;
+	width: 0;
+	height: 0;
+	border-left-color: #c8caca;
+	border-right: 0;
+	border-bottom: 0;
+}
+
+.wp-speech-bubble {
+	position: relative;
 	background: #ded190;
+  border-radius: .4em;
+  padding: auto
+}
+
+.wp-speech-bubble:after {
+  content: '';
+	position: absolute;
+	left: 0;
+	top: 50%;
+	width: 0;
+	height: 0;
+	border-right-color: #ded190;
+	border-left: 0;
+	border-bottom: 0;
+
 }

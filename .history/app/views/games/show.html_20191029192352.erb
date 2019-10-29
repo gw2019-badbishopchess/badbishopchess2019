@@ -64,7 +64,13 @@
       <div class="card-body chat-room">
         <div class="messages-chatroom">
           <% @game.chats.each do |chat| %>
-              <div class="col-10 offset-1 speech-bubble my-3 rounded">
+            <% if current_user.id == @game.black_player_id %>
+              <div class="col-11 offset-1 bp-speech-bubble">
+                <small class="chat-message-username"><%= chat.username %></small>
+                <p class="chat-message"><%= chat.message %></p>
+              </div>
+            <% else %>
+              <div class="col-11 offset-1 bp-speech-bubble">
                 <small class="chat-message-username"><%= chat.username %></small>
                 <p class="chat-message"><%= chat.message %></p>
               </div>
@@ -79,7 +85,7 @@
           <%= f.hidden_field 'game_id', value: @game.id %>
           <%= f.hidden_field 'user_id', value: current_user.id %>
           <%= f.input 'message', label: "Chat", id: "input-chat-message"%>
-          <%= f.button :submit, "Chat", class: "btn-danger", id: "submit-chat" %>
+            <%= f.button :submit, "Chat", class: "btn-danger", id: "submit-chat" %>
         <% end %>
       </div>
     </div>
@@ -153,11 +159,10 @@ $(document).ready($(function() {
   );
   var channel = pusher.subscribe('chat');
   channel.bind('new', function(data) {
-    alert('')
+    alert('in bind')
     $('#chat_message').val("");
     $('#submit-chat').removeAttr("disabled");
-    if 
-    var htmlAdd = `<div class="col-10 speech-bubble my-1 rounded"><small class="chat-message-username">${data.username}</small><p class="chat-message">${data.message}</p></div>`;
+    var htmlAdd = `<div class="col-12"><small class="chat-message-username">${data.username}</small><p class="chat-message">${data.message}</p><hr /></div>`;
     return $('.messages-chatroom').append(htmlAdd);
   })
 }));
