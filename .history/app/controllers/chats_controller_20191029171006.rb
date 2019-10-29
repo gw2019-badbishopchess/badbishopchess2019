@@ -11,6 +11,7 @@ class ChatsController < ApplicationController
 
     def create
       @chat = Chat.create(chat_params)
+      render @chat
     end
 
   private

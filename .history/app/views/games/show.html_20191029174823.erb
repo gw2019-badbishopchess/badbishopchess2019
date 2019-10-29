@@ -63,26 +63,20 @@
     <%# <button type="button" class="btn btn-dark" id="chatroom-btn" >click for chatbox</button> %>
     <div class="card chat-room d-flex flex-column">
       <div class="card-body chat-room">
-        <div class="messages-chatroom">
-          <% @game.chats.each do |chat| %>
-                <div class="col-11 offset-1 user-speech-bubble">
-                  <small class="chat-message-username"><%= chat.username %></small>
-                  <p class="chat-message"><%= chat.message %></p>
-                  <hr />
-                </div>
-          <% end %>
-        </div>
-      </div>
-      <div class="card-footer text-muted d-flex align-items-end" id="chat-form">
+        <div class="card-footer text-muted">
         <%= simple_form_for @chat,  wrapper: :inline_form, 
-                                    html: {  id: "chat-in" },
+                                    html: {  id: "chat-form" },
                                     input_html: { "data-type" => :json } do |f| %>
           <%= f.hidden_field 'username', value: current_user.username %>
           <%= f.hidden_field 'game_id', value: @game.id %>
           <%= f.hidden_field 'user_id', value: current_user.id %>
-          <%= f.input 'message', label: "Chat", id: "input-chat-message"%>
+          <%= f.input 'message', label: "Chat" %>
             <%= f.button :submit, "Chat", class: "btn-danger", id: "submit-chat" %>
         <% end %>
+      </div>
+      </div>
+      <div class="card-footer text-muted d-flex align-items-end" id="chat-form">
+        <input type="text" class="form-control" id="chat-input" username="<%= current_user.username %>" user="<%= current_user.id %>" gameid="<%= @game.id %>" placeholder="Chat here!">
       </div>
     </div>
   </div>
@@ -155,11 +149,9 @@ $(document).ready($(function() {
   );
   var channel = pusher.subscribe('chat');
   channel.bind('new', function(data) {
-    alert('in bind')
-    $('#chat_message').val("");
-    $('#submit-chat').removeAttr("disabled");
-    var htmlAdd = `<div class="col-12"><small class="chat-message-username">${data.username}</small><p class="chat-message">${data.message}</p><hr /></div>`;
-    return $('.messages-chatroom').append(htmlAdd);
+
+    var htmlAdd = `<div class="col-12"><small class="chat-message-username">${username}</small><p class="chat-message">${message}</p><hr /></div>`;
+    $('.messages-chatroom').append(htmlAdd);
   })
 }));
 </script>

@@ -74,15 +74,7 @@
         </div>
       </div>
       <div class="card-footer text-muted d-flex align-items-end" id="chat-form">
-        <%= simple_form_for @chat,  wrapper: :inline_form, 
-                                    html: {  id: "chat-in" },
-                                    input_html: { "data-type" => :json } do |f| %>
-          <%= f.hidden_field 'username', value: current_user.username %>
-          <%= f.hidden_field 'game_id', value: @game.id %>
-          <%= f.hidden_field 'user_id', value: current_user.id %>
-          <%= f.input 'message', label: "Chat", id: "input-chat-message"%>
-            <%= f.button :submit, "Chat", class: "btn-danger", id: "submit-chat" %>
-        <% end %>
+        <input type="text" class="form-control" id="chat-input" username="<%= current_user.username %>" user="<%= current_user.id %>" gameid="<%= @game.id %>" placeholder="Chat here!">
       </div>
     </div>
   </div>
@@ -149,18 +141,42 @@ $(document).ready($(function() {
 </script>
 <script>  
 $(document).ready($(function() { 
-  var pusher = new Pusher('<%= ENV["PUSHER_KEY"] %>', {
-    cluster: '<%= ENV["PUSHER_CLUSTER"] %>'
+  $('#chat-input').keypress(function(event) {
+    if (event.which == 13 ) {
+      const message = event.target.value;
+      const username = $(this).attr('username');
+      const game_id = $(this).attr('gameid');
+      const user_id = $(this).attr('user');
+      $.ajax({
+          type: 'POST',
+          url: `/chats`,
+          dataType: 'json',
+          data: {
+            chat: {
+              message: message,
+              username: username,
+              game_id: game_id,
+              user_id: user_id 
+            },
+          },
+          success: function(data) {
+            // alert('you got to ajax');
+            $('#chat-input').val("");
+          }
+      })
+      var pusher = new Pusher('<%= ENV["PUSHER_KEY"] %>', {
+        cluster: '<%= ENV["PUSHER_CLUSTER"] %>'
+        }
+      );
+      var channel = pusher.subscribe('chat');
+      channel.bind('new', function(data) {
+        var htmlAdd = `<div class="col-12"><small class="chat-message-username">${username}</small><p class="chat-message">${message}</p><hr /></div>`;
+        $('.messages-chatroom').append(htmlAdd);
+      })
+    
     }
-  );
-  var channel = pusher.subscribe('chat');
-  channel.bind('new', function(data) {
-    alert('in bind')
-    $('#chat_message').val("");
-    $('#submit-chat').removeAttr("disabled");
-    var htmlAdd = `<div class="col-12"><small class="chat-message-username">${data.username}</small><p class="chat-message">${data.message}</p><hr /></div>`;
-    return $('.messages-chatroom').append(htmlAdd);
   })
+  
 }));
 </script>
 

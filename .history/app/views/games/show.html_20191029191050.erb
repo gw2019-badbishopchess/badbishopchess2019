@@ -156,8 +156,8 @@ $(document).ready($(function() {
   var channel = pusher.subscribe('chat');
   channel.bind('new', function(data) {
     alert('in bind')
-    $('#chat_message').val("");
-    $('#submit-chat').removeAttr("disabled");
+    $('#chat-input').val("");
+    $('.chat-message').removeAttr("disabled");
     var htmlAdd = `<div class="col-12"><small class="chat-message-username">${data.username}</small><p class="chat-message">${data.message}</p><hr /></div>`;
     return $('.messages-chatroom').append(htmlAdd);
   })

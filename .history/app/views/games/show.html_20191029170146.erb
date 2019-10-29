@@ -57,35 +57,43 @@
       </table>
     </div>
 
-
-
-  <div class="col-5">
-    <%# <button type="button" class="btn btn-dark" id="chatroom-btn" >click for chatbox</button> %>
-    <div class="card chat-room d-flex flex-column">
-      <div class="card-body chat-room">
-        <div class="messages-chatroom">
-          <% @game.chats.each do |chat| %>
-                <div class="col-11 offset-1 user-speech-bubble">
-                  <small class="chat-message-username"><%= chat.username %></small>
-                  <p class="chat-message"><%= chat.message %></p>
-                  <hr />
+    <div class="col-5">
+      <div class="container-fluid">
+        <div class="chat-box py-2">
+          <h4 class="username d-none mb-3"></h4>
+          <% @chats.each do |chat| %>
+            <div class="col-12">
+              <div class="chat bg-secondary d-inline-block text-left text-white mb-2">
+                <div class="chat-bubble">
+                  <small class="chat-username"><%= chat.username %></small>
+                  <p class="m-0 chat-message"><%= chat.message %></p>
                 </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+        <div class="chat-text-input">
+          <%= form_with(model: @chat, remote: true, format: :json, id: 'chat-form') do |form| %>
+            <% if @chat.errors.any? %>
+              <div id="error_explanation">
+                <h2><%= pluralize(@chat.errors.count, "error") %> prohibited this chat from being saved:</h2>
+                <ul>
+                  <% @chat.errors.full_messages.each do |message| %>
+                    <li><%= message %></li>
+                  <% end %>
+                </ul>
+              </div>
+            <% end %>
+            <div class="field position-relative">
+              <%= form.text_field :message, id: :message, class: "form-control", required: true, disabled: true %>
+              <%= form.hidden_field :username, id: :username %>
+            </div>
           <% end %>
         </div>
       </div>
-      <div class="card-footer text-muted d-flex align-items-end" id="chat-form">
-        <%= simple_form_for @chat,  wrapper: :inline_form, 
-                                    html: {  id: "chat-in" },
-                                    input_html: { "data-type" => :json } do |f| %>
-          <%= f.hidden_field 'username', value: current_user.username %>
-          <%= f.hidden_field 'game_id', value: @game.id %>
-          <%= f.hidden_field 'user_id', value: current_user.id %>
-          <%= f.input 'message', label: "Chat", id: "input-chat-message"%>
-            <%= f.button :submit, "Chat", class: "btn-danger", id: "submit-chat" %>
-        <% end %>
-      </div>
-    </div>
-  </div>
+    <div class="col-5">
+
+  
 
   
   <div class="row d-flex justify-content-end">
@@ -146,21 +154,5 @@ $(document).ready($(function() {
       });    
       
     }));
-</script>
-<script>  
-$(document).ready($(function() { 
-  var pusher = new Pusher('<%= ENV["PUSHER_KEY"] %>', {
-    cluster: '<%= ENV["PUSHER_CLUSTER"] %>'
-    }
-  );
-  var channel = pusher.subscribe('chat');
-  channel.bind('new', function(data) {
-    alert('in bind')
-    $('#chat_message').val("");
-    $('#submit-chat').removeAttr("disabled");
-    var htmlAdd = `<div class="col-12"><small class="chat-message-username">${data.username}</small><p class="chat-message">${data.message}</p><hr /></div>`;
-    return $('.messages-chatroom').append(htmlAdd);
-  })
-}));
 </script>
 

@@ -11,6 +11,9 @@ class ChatsController < ApplicationController
 
     def create
       @chat = Chat.create(chat_params)
+      Pusher.trigger('chat', 'new', {
+        self.as_json
+      })
     end
 
   private

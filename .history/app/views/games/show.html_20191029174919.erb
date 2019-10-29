@@ -75,12 +75,12 @@
       </div>
       <div class="card-footer text-muted d-flex align-items-end" id="chat-form">
         <%= simple_form_for @chat,  wrapper: :inline_form, 
-                                    html: {  id: "chat-in" },
+                                    html: {  id: "chat-form" },
                                     input_html: { "data-type" => :json } do |f| %>
           <%= f.hidden_field 'username', value: current_user.username %>
           <%= f.hidden_field 'game_id', value: @game.id %>
           <%= f.hidden_field 'user_id', value: current_user.id %>
-          <%= f.input 'message', label: "Chat", id: "input-chat-message"%>
+          <%= f.input 'message', label: "Chat" %>
             <%= f.button :submit, "Chat", class: "btn-danger", id: "submit-chat" %>
         <% end %>
       </div>
@@ -155,11 +155,9 @@ $(document).ready($(function() {
   );
   var channel = pusher.subscribe('chat');
   channel.bind('new', function(data) {
-    alert('in bind')
-    $('#chat_message').val("");
-    $('#submit-chat').removeAttr("disabled");
-    var htmlAdd = `<div class="col-12"><small class="chat-message-username">${data.username}</small><p class="chat-message">${data.message}</p><hr /></div>`;
-    return $('.messages-chatroom').append(htmlAdd);
+    
+    var htmlAdd = `<div class="col-12"><small class="chat-message-username">${username}</small><p class="chat-message">${message}</p><hr /></div>`;
+    $('.messages-chatroom').append(htmlAdd);
   })
 }));
 </script>
