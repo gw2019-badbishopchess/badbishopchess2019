@@ -4,7 +4,7 @@
       <div class="sidebar-sticky pt-5">
         <div class="list-group" id="list-tab" role="tablist">
           <a class="list-group-item d-flex list-group-item-action justify-content-center align-items-center" id="list-overview-list" data-toggle="list" href="#list-overview" role="tab" aria-controls="overview">
-            <h6>Overview</h6>
+            <h6 class="text-center">Hi <%= current_user.username %></h6>
           </a>
           <br/>
           <a class="list-group-item d-flex list-group-item-action justify-content-between align-items-center" id="list-current-list" data-toggle="list" href="#list-current" role="tab" aria-controls="current">
@@ -38,23 +38,93 @@
       <main role="main" class="col-md-9 ml-sm-auto col-lg-9 px-4 mt-5">
         <div class="tab-content" id="nav-tabContent">
           <div class="tab-pane fade  show active" id="list-overview" role="tabpanel" aria-labelledby="list-overview-list">
-            <h3>this is the overview page</h3>
-            <% if !current_user.username.nil? %>
-              <h5>Hi <%= current_user.username %></h5>
-            <% else %>
-              <h5>Hi Player</h5>
-            <% end %>
+            <h3>Hi <%= current_user.username %></h3>
+            <h5>Your Overview:</h5>
             <br />
-            <div class="row">
-              <div class="col-6">
-                <div class="card bg-transparent border-0">
-                  <div class="card-body">
+            <!---- this is list for overview chart / list of open games-->
+            <div class="row align-items-center mb-5">
+              <!---- this is doughnut chart for all played games-->  
+              <div class="col-6 mx-2 align-self-start">
+                <div class="card bg-light border d-flex align-items-stretch">
+                  <div class="card-body px-0 pt-0">
+                    <h6 class="card-title text-center pt-3">All Games</h6>
                     <canvas id="doughnut-chart"></canvas>
                   </div>
                 </div>
               </div>
+            <!---- list of in progress games-->
+              <div class="col-5 p-0 align-self-start">
+                <div class="card bg-light border">
+                  <div class="card-body p-0">
+                    <h6 class="card-title text-center pt-3">Currently Playing Games</h6>
+                    <% if in_progress_games.exists? %>
+                      <ul class="list-group align-self-start">
+                        <% in_progress_games.each do |game| %>
+                          <li class="list-group-item border-top rounded-0">
+                            <div class="row">
+                              <p class="col-8 my-auto dashboard-list-text">You are currently playing <%= game_opponent(game).username %></p>
+                              <%= link_to "Resume Game", game_path(game), class: "btn btn-dark btn-sm col-3 my-auto list-button"%>
+                            </div>
+                          </li>
+                        <% end %>
+                      </ul>
+                    <% else %>
+                      <h6 class="text-center mt-5 p-3">You don't have any current games playing</h6>
+                      <%= link_to "Find an Open Game", games_path, class: "dashboard-list-item" %>
+                    <% end %>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
+
+          <!---- this is list for games won lost/forfeited played games-->
+            <div class="row align-items-center mt-4"> 
+            <!---- this is list for games won -->
+              <div class="col-6 mx-2 align-self-start">
+                <div class="card bg-light border d-flex align-items-stretch">
+                  <div class="card-body p-0">
+                    <h6 class="card-title text-center pt-3">Games Won</h6>
+                    <% if won_games.exists? %>
+                      <ul class="list-group align-self-start">
+                        <% won_games.each do |game| %>
+                          <li class="list-group-item border-top rounded-0">
+                            <div class="row">
+                              <p class="col-8 my-auto dashboard-list-text">You beat <%= game_opponent(game).username %> on <%= game.updated_at.strftime("%B, %Y") %></p>
+                              <%= link_to "See Game", game_path(game), class: "btn btn-dark btn-sm col-3 my-auto list-button"%>
+                            </div>
+                          </li>
+                        <% end %>
+                      </ul>
+                    <% else %>
+                      <h6 class="text-center mt-1 p-3">You haven't won a game yet</h6>
+                    <% end %>
+                  </div>
+                </div>
+              </div>
+            <!---- this is list for games lost/forfeited -->
+              <div class="col-5 p-0 align-self-start">
+                <div class="card bg-light border d-flex align-items-stretch">
+                  <div class="card-body p-0">
+                    <h6 class="card-title text-center pt-3">Games Lost/Forfeited</h6>
+                    <% if forfeited_or_lost_games.exists? %>
+                      <ul class="list-group align-self-start">
+                        <% forfeited_or_lost_games.each do |game| %>
+                          <li class="list-group-item border-top rounded-0">
+                            <div class="row">
+                              <p class="col-8 my-auto dashboard-list-text">You lost to <%= game_opponent(game).username %> on <%= game.updated_at.strftime("%B, %Y") %></p>
+                              <%= link_to "See Game", game_path(game), class: "btn btn-dark btn-sm col-3 my-auto list-button"%>
+                            </div>
+                          </li>
+                        <% end %>
+                      </ul>
+                    <% else %>
+                      <h6 class="text-center mt-1 p-3">You haven't lost a game yet</h6>
+                    <% end %>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>  <!---- this is div for the end of overview -->
 
     <!---end of overview section-->
           <div class="tab-pane fade" id="list-current" role="tabpanel" aria-labelledby="list-current-list">
