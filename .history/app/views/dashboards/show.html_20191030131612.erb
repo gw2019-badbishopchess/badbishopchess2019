@@ -354,7 +354,7 @@
 new Chart(document.getElementById("doughnut-chart"), {
     type: 'doughnut',
     data: {
-      labels: ["Currently Playing", "Still Open", "Won", "Lost", "Forefeited"],
+      labels: ["Currently Playing", "Games Still Open", "Games Won", "Games Lost", "Games Forefeited"],
       datasets: [
         {
           backgroundColor: ["#3e95cd", "#3cba9f","#e8c3b9","#c45850", "#4AFFC3"],
@@ -364,7 +364,9 @@ new Chart(document.getElementById("doughnut-chart"), {
     },
     options: {
       legend: {
-        display: false
+        display: true,
+        position: 'top',
+        align: 'center',
       }
     }
 });

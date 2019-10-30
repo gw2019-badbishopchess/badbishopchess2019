@@ -256,13 +256,14 @@ background: #fff3;
 }
 
 .hero {
-  background: image_url('hero2.jpg') no-repeat top center;;
+  background: image_url('hero2.png') no-repeat top center;;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
   height: 100vh;
   background-size: cover;
   color: #F2F2F2;
+  text-shadow: 2px 2px 4px #000000;
 }
 
 .index-body {

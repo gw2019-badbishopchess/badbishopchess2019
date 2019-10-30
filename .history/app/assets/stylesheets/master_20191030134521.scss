@@ -11,9 +11,9 @@
   padding-left: 20px;
 }
 
-// h1, .h1 {
-//   font-size: 3.5rem;
-// }
+h1, .h1 {
+  font-size: 3.5rem;
+}
 
 .badBishopMain {
   margin: 11% 0% 0% 0%;
@@ -91,6 +91,14 @@ tr:nth-child(odd) td:nth-child(even), tr:nth-child(even) td:nth-child(odd) {
   width: 50%;
   text-align: center;
   font-size: 2rem;
+}
+
+.last-moved-piece {
+  background: green;
+}
+
+.ui-droppable-hover {
+  border: red;
 }
 
 /*
@@ -256,15 +264,12 @@ background: #fff3;
 }
 
 .hero {
-  background: image_url('hero2.jpg') no-repeat top center;;
+  background: image_url('hero1.jpg') no-repeat center center;;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
   height: 100vh;
   background-size: cover;
   color: #F2F2F2;
-}
-
-.index-body {
-  background-color: #141823;
+  text-shadow: 2px 2px 4px #000000;
 }
