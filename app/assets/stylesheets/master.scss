@@ -264,35 +264,7 @@ width: 0.3rem;
 background: #fff3; 
 }
 
-// chatroom
-.chat-room {
-  height: 70vh;
-  font-size: 0.85rem;
-  // font-size: 50% !important;
-}
-
-.chat-message, .chat-message-username {
-  font-size: 0.85rem;
-  margin-bottom: 2px !important;
-}
-
-.chat-room.card-body {
-  overflow: auto;
-  
-}
-
-#chat-input {
-  font-size: 0.85rem;
-}
-
-.chat-message-username {
-  font-size: 0.55rem;
-}
-
-.speech-bubble {
-	background: #ded190;
-}
-
+// dashboard
 .dashboard-list-text {
   font-size: 0.85rem;
 }
@@ -342,4 +314,99 @@ background: #fff3;
 
 .open-your-game {
   font-size: 0.7rem !important;
+}
+
+// chat 
+// chatroom
+.chat-room {
+  height: 70vh;
+  font-size: 0.85rem;
+  // font-size: 50% !important;
+}
+
+.chat-message, .chat-message-username {
+  font-size: 0.85rem;
+  margin-bottom: 2px !important;
+}
+
+
+#chat-input {
+  font-size: 0.85rem;
+}
+
+.chat-message-username {
+  font-size: 0.55rem;
+}
+
+.message-sent {
+	position: relative;
+	background-color: rgba(20,24,36,0.1);  
+	border-radius: .4em;
+}
+
+.message-sent:after {
+	content: '';
+	position: absolute;
+	right: 0;
+	top: 50%;
+	width: 0;
+	height: 0;
+	border: 0.625em solid transparent;
+	border-left-color: rgba(20,24,36,0.1);  
+	border-right: 0;
+	border-bottom: 0;
+	margin-top: -0.312em;
+	margin-right: -0.625em;
+}
+
+.message-recieved {
+	position: relative;
+	background: rgba(112,92,42,0.2);  
+	border-radius: .4em;
+}
+
+.message-recieved:after {
+	content: '';
+	position: absolute;
+	left: 0;
+	top: 50%;
+	width: 0;
+	height: 0;
+	border: 0.625em solid transparent;
+	border-right-color: rgba(112,92,42,0.1); 
+	border-left: 0;
+	border-bottom: 0;
+	margin-top: -0.312em;
+	margin-left: -0.625em;
+}
+
+#chat-button {
+  position: fixed;
+  bottom: 23px;
+  left: 28px;
+  width: 280px;
+}
+
+.chat-popup {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  border: 3px solid #f1f1f1;
+  z-index: 9;
+  width: 400px;
+  height: 70vh;
+  padding: 10px;
+  background-color: white;
+}
+
+#chat-form {
+  position: sticky;
+}
+
+.chat-body {
+  height: 52vh;
+}
+
+.chat-footer {
+  height: 13vh;
 }

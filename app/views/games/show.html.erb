@@ -64,7 +64,7 @@
       <div class="card-body chat-room">
         <div class="messages-chatroom">
           <% @game.chats.each do |chat| %>
-              <div class="col-10 offset-1 speech-bubble my-3 rounded">
+              <div class="col-11 <%= current_user.id == chat.user_id ? 'offset-1 message-sent' : 'message-recieved' %>">
                 <small class="chat-message-username"><%= chat.username %></small>
                 <p class="chat-message"><%= chat.message %></p>
               </div>
@@ -94,7 +94,6 @@
   
   <div class="row d-flex justify-content-center">
      <% if @game.black_player_id.present? && @game.white_player_id.present? %>
-        
           <% if current_user.id == @game.white_player_id %>
             <%= simple_form_for @game, url: forfeit_game_path(@game) do |f| %>
               <%= f.hidden_field 'winning_user_id', value: @game.black_player_id %>
@@ -110,62 +109,116 @@
           <% end %>
       <% end %>
   </div>
+<!--- for chat pop up-->
+<div class="btn-group dropup" id="chat-button">
+  <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+  Chat with your opponenet
+  </button>
+  <div class="dropdown-menu">
+    <div class="chat-popup overflow-auto" id="myForm">
+      <div class="card">
+        <div class="card-body chat-body overflow-auto">
+          <div class="messages-chatroom">
+            <% @game.chats.each do |chat| %>
+                <div class="col-11 <%= current_user.id == chat.user_id ? 'offset-1 message-sent' : 'message-recieved' %>">
+                  <small class="chat-message-username"><%= chat.username %></small>
+                  <p class="chat-message"><%= chat.message %></p>
+                </div>
+            <% end %>
+          </div>
+        </div>
+        <div class="card-footer chat-footer bottom-footer text-muted d-flex align-items-end" id="chat-form">
+          <%= simple_form_for @chat,  
+                                      html: {  id: "chat-in", :class => "form-inline" },
+                                      input_html: { "data-type" => :json } do |f| %>
+            <div class="form row">
+              <div class="col-10">
+                <%= f.hidden_field 'username', value: current_user.username %>
+                <%= f.hidden_field 'game_id', value: @game.id %>
+                <%= f.hidden_field 'user_id', value: current_user.id %>
+                <%= f.input 'message', label: "Chat", id: "input-chat-message"%>
+              </div>
+              <div class="col-2">
+                <%= f.button :submit, "Chat", class: "btn-danger d-inline-flex justify-content-end", id: "submit-chat" %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 
+
+
 </body>
 
 <script>
 $(document).ready($(function() {
-    $('.piece').draggable({ 
-        snap: 'droppable',
-        revert: 'invalid'
-      });
-    $('.droppable').droppable({
-        drop: function(event, ui) {
-          let piece = ui.draggable
-          let destination_square = $(this);
-          var update_piece = {
-            id: piece.data('id'),
-            game_id: piece.data('game-id'),
-            x_coordinate: destination_square.data('x-coord'),
-            y_coordinate: destination_square.data('y-coord')
-          }
-          $.ajax({
-            type: 'PUT',
-            url: `/pieces/${update_piece.id}`,
-            // beforeSend: function(xhr) { xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content')) },
-            dataType: 'json',
-            data: {
-              piece: {
-                game_id: update_piece.game_id, 
-                id: update_piece.id,
-                x_coordinate: update_piece.x_coordinate,
-                y_coordinate: update_piece.y_coordinate
-              },
+  $('#chat-button').click(function() {
+    $('#myForm').css("display", "block");
+  });
+  $('#close-button').click(function() {
+    $('#myForm').css("display", "none");
+  });
+  $('.piece').draggable({ 
+      snap: 'droppable',
+      revert: 'invalid'
+    });
+  $('.droppable').droppable({
+      drop: function(event, ui) {
+        let piece = ui.draggable
+        let destination_square = $(this);
+        var update_piece = {
+          id: piece.data('id'),
+          game_id: piece.data('game-id'),
+          x_coordinate: destination_square.data('x-coord'),
+          y_coordinate: destination_square.data('y-coord')
+        }
+        $.ajax({
+          type: 'PUT',
+          url: `/pieces/${update_piece.id}`,
+          // beforeSend: function(xhr) { xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content')) },
+          dataType: 'json',
+          data: {
+            piece: {
+              game_id: update_piece.game_id, 
+              id: update_piece.id,
+              x_coordinate: update_piece.x_coordinate,
+              y_coordinate: update_piece.y_coordinate
             },
-            success: function(data) {
-              destination_square.empty();
-              location.reload(true);
-            }
-          });
-        }  
-      });    
-      
-    }));
+          },
+          success: function(data) {
+            destination_square.empty();
+            location.reload(true);
+          }
+        });
+      }  
+    });    
+    
+  }));
 </script>
+
+
+
 <script>  
-$(document).ready($(function() { 
+  function updateScroll() {
+    var element = document.getElementById("#myForm");
+    element.scrollTop = element.scrollHeight;
+  }
   var pusher = new Pusher('<%= ENV["PUSHER_KEY"] %>', {
     cluster: '<%= ENV["PUSHER_CLUSTER"] %>'
     }
   );
   var channel = pusher.subscribe('chat');
   channel.bind('new', function(data) {
-    alert('')
+    function classId() {
+      return <%= current_user.id %> == data.user_id ? 'offset-1 message-sent' : 'message-recieved'
+    }
     $('#chat_message').val("");
     $('#submit-chat').removeAttr("disabled");
-    if 
-    var htmlAdd = `<div class="col-10 speech-bubble my-1 rounded"><small class="chat-message-username">${data.username}</small><p class="chat-message">${data.message}</p></div>`;
-    return $('.messages-chatroom').append(htmlAdd);
-  })
-}));
+    var htmlAdd = `<div class="col-11 ${classId()}"><small class="chat-message-username">${data.username}</small><p class="chat-message">${data.message}</p></div>`;
+    $('.messages-chatroom').append(htmlAdd);
+    updateScroll();
+  });
 </script>
 

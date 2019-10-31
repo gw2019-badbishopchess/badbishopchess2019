@@ -57,4 +57,6 @@ module GamesHelper
     return open_game_opponent(game).games.count
   end
 
+  
+
 end
