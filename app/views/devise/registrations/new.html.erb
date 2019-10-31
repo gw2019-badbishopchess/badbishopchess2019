@@ -1,4 +1,5 @@
 <div class="container col-11 col-md-7 col-lg-5 bg-warning text-dark login-container p-4 mt-5 rounded">
+<%= devise_error_messages! %>  
   <h2 class="mb-3">Sign up</h2>
     <%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
       <%= f.error_notification %>

@@ -53,9 +53,9 @@
                 </div>
               </div>
             <!---- list of in progress games-->
-              <div class="col-5 p-0 align-self-start">
+              <div class="col-5 p-0 d-flex align-self-stretch">
                 <div class="card bg-light border">
-                  <div class="card-body p-0">
+                  <div class="card-body p-0 ">
                     <h6 class="card-title text-center pt-3">Currently Playing Games</h6>
                     <% if in_progress_games.exists? %>
                       <ul class="list-group align-self-start">
@@ -69,8 +69,9 @@
                         <% end %>
                       </ul>
                     <% else %>
+                      <div class="row">
                       <h6 class="text-center mt-5 p-3">You don't have any current games playing</h6>
-                      <%= link_to "Find an Open Game", games_path, class: "dashboard-list-item" %>
+                      </div>
                     <% end %>
                   </div>
                 </div>
@@ -202,7 +203,7 @@
                           <div class="col mx-auto text-center">
                             <%= link_to "Start a New Game", new_game_path, class: "btn btn-dark btn-sm my-auto list-button" %>
                           </div>
-                        </div>
+                      </div>
                     <% end %>
                   </div>
                 </div>

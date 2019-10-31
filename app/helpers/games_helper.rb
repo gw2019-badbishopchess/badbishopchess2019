@@ -40,5 +40,10 @@ module GamesHelper
     end
   end
 
+  # def open_game_opponent(game)
+  #   opponent_id = game.user_id
+  #   return User.find(opponent_id)
+  # end
+
 
 end

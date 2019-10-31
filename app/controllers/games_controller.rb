@@ -19,6 +19,7 @@ class GamesController < ApplicationController
 
   def index
     @unmatched_games = Game.where(:state => 'open')
+    @games = Game.all
   end
 
   def update
@@ -32,7 +33,7 @@ class GamesController < ApplicationController
       @game.update_attributes(game_params)
        redirect_to game_path(@game)
     else
-      flash[:alert] = "Error: You are already a player in this game!!" 
+      flash[:error] = "Error: You are already a player in this game!!" 
       redirect_to games_path
     end
   end

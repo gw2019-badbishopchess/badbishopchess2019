@@ -1,23 +1,30 @@
-<h1> index.html.erb </h1>
+
 <div class="container">
-  <% if @unmatched_games.present? %>
-    <% @unmatched_games.each do |game| %>
-      <h2><%= "Game No. #{game.id}" %></h2>
-      <% if game.black_player_id.blank?  %>
-        <%= simple_form_for game, url: join_game_path(game) do |f| %>
-          <h6 class="text-center"><%= "Opponent: #{game.white_player_id}" %> </h6>
-            <%= f.input :black_player_id, as: :hidden, :input_html => { :value => current_user.id } %>
-            <%= f.hidden_field 'state', value: 'in progress' %>
-            <span class="IndexJoinGame"><%= f.submit "Join as Black Player", class: "btn btn-primary"%></span> 
-        <% end %>
-      <% elsif game.white_player_id.blank?  %>
-        <%= simple_form_for game, url: join_game_path(game) do |f| %>
-          <h6 class="text-center"><%= "Opponent: #{game.black_player_id}" %> </h6>
-            <%= f.input :white_player_id, as: :hidden, :input_html => { :value => current_user.id } %>
-            <%= f.hidden_field 'state', value: 'in progress' %>
-            <span class="IndexJoinGame"><%= f.submit "Join as White Player", class: "btn btn-primary"%></span> 
+  <h3 class="text-center mt-5"><u>Open Games for Play</u></h3>
+    <div class="row">
+      <% if @unmatched_games.present? %>
+        <% @unmatched_games.each do |game| %>
+          <div class="card">
+            <div class="card-body">
+              <%= open_game_opponent(game)  %>
+                <% if game.white_player_id.blank?  %>
+                  <%= simple_form_for game, url: join_game_path(game) do |f| %>
+                    <h6 class="text-center"><%= "Opponent: #{game.white_player_id}" %> </h6>
+                      <%= f.input :black_player_id, as: :hidden, :input_html => { :value => current_user.id } %>
+                      <%= f.hidden_field 'state', value: 'in progress' %>
+                      <span class="IndexJoinGame"><%= f.submit "Join as Black Player", class: "btn btn-primary"%></span> 
+                  <% end %>
+                <% elsif game.white_player_id.blank?  %>
+                  <%= simple_form_for game, url: join_game_path(game) do |f| %>
+                    <h6 class="text-center"><%= "Opponent: #{game.black_player_id}" %> </h6>
+                      <%= f.input :white_player_id, as: :hidden, :input_html => { :value => current_user.id } %>
+                      <%= f.hidden_field 'state', value: 'in progress' %>
+                      <span class="IndexJoinGame"><%= f.submit "Join as White Player", class: "btn btn-primary"%></span> 
+                  <% end %>
+              <% end %>
+            </div>
+          </div>
         <% end %>
       <% end %>
-    <% end %>
-  <% end %>
+    </div>
 </div>
