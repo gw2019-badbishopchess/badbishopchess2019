@@ -24,6 +24,11 @@ module DashboardsHelper
     return current_user.games.where(state: "in progress")
   end
 
+  def in_game_opponent(games)
+    return true if games.count > games.where(user_id: current_user).count
+  end
+
+
   def game_opponent(game)
 
     if game.white_player_id.present? && game.black_player_id.present?

@@ -68,7 +68,7 @@
               
               <div class="col border-0 align-items-center">
                 <%= simple_form_for (Game.new), url: games_path do |f| %>
-                  <div class="modal-body">
+                  <div class="modal-body text-center">
                     <%= f.hidden_field 'user_id', value: current_user.id %>
                     <%= f.hidden_field 'white_player_id', value: current_user.id %>
                     <h5>White Pieces</h5>
@@ -79,7 +79,7 @@
 
               <div class="col border-0 align-items-center"> 
                 <%= simple_form_for (Game.new), url: games_path do |f| %>
-                  <div class="modal-body">
+                  <div class="modal-body text-center">
                     <%= f.hidden_field 'user_id', value: current_user.id %>
                     <%= f.hidden_field 'black_player_id', value: current_user.id %>
                     <h5>Black Pieces</h5>

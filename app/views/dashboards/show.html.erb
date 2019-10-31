@@ -12,7 +12,7 @@
             <span class="badge badge-secondary badge-pill"><%= in_progress_games.count %></span>
           </a>
           <a class="list-group-item d-flex list-group-item-action justify-content-between align-items-center active" id="list-played-list" data-toggle="list" href="#list-played" role="tab" aria-controls="played">
-            Games Played
+            Total Games
             <span class="badge badge-secondary badge-pill"><%= current_user.games.count %></span>
           </a>
           <a class="list-group-item d-flex list-group-item-action justify-content-between align-items-center" id="list-open-list" data-toggle="list" href="#list-open" role="tab" aria-controls="open">
@@ -57,7 +57,7 @@
                 <div class="card bg-light border">
                   <div class="card-body p-0 ">
                     <h6 class="card-title text-center pt-3">Currently Playing Games</h6>
-                    <% if in_progress_games.exists? %>
+                    <% if in_progress_games.exists?  %>
                       <ul class="list-group align-self-start">
                         <% in_progress_games.each do |game| %>
                           <li class="list-group-item border-top rounded-0">
@@ -69,8 +69,8 @@
                         <% end %>
                       </ul>
                     <% else %>
-                      <div class="row">
-                      <h6 class="text-center mt-5 p-3">You don't have any current games playing</h6>
+                      <div class="row px-4">
+                        <h6 class="text-center mt-5 p-3">You don't have any current games playing</h6>
                       </div>
                     <% end %>
                   </div>
@@ -85,7 +85,7 @@
                 <div class="card bg-light border d-flex align-items-stretch">
                   <div class="card-body p-0">
                     <h6 class="card-title text-center pt-3">Games Won</h6>
-                    <% if won_games.exists? %>
+                    <% if won_games.exists? && in_game_opponent(won_games_games) %>
                       <ul class="list-group align-self-start">
                         <% won_games.each do |game| %>
                           <li class="list-group-item border-top rounded-0">
@@ -107,7 +107,7 @@
                 <div class="card bg-light border d-flex align-items-stretch">
                   <div class="card-body p-0">
                     <h6 class="card-title text-center pt-3">Games Lost/Forfeited</h6>
-                    <% if forfeited_or_lost_games.exists? %>
+                    <% if forfeited_or_lost_games.exists? && in_game_opponent(forfeited_or_lost_games) %>
                       <ul class="list-group align-self-start">
                         <% forfeited_or_lost_games.each do |game| %>
                           <li class="list-group-item border-top rounded-0">
@@ -134,7 +134,7 @@
                 <div class="card bg-light border">
                   <div class="card-body p-0">
                     <h6 class="card-title text-center pt-3">Currently Playing Games</h6>
-                    <% if in_progress_games.exists? %>
+                    <% if in_progress_games.exists? && in_game_opponent(in_progress_games) %>
                       <ul class="list-group align-self-start">
                         <% in_progress_games.each do |game| %>
                           <li class="list-group-item border-top rounded-0">
@@ -146,7 +146,7 @@
                         <% end %>
                       </ul>
                     <% else %>
-                      <h6 class="text-center mt-5 p-3">You don't have any current games playing</h6>
+                      <h6 class="text-center mt-5 mx-5 p-5"> You don't have any current games playing </h6>
                       <div class="row my-3">
                           <div class="col mx-auto text-center">
                             <%= link_to "Play an Open Game", games_path, class: "btn btn-dark btn-sm my-auto list-button" %>
@@ -183,7 +183,7 @@
                               <% elsif game.state == "forfeited" %>
                                 <p class="col-8 my-auto dashboard-list-text">You forfeited to <%= game_opponent(game).username %> on <%= game.updated_at.strftime("%B, %Y") %></p>
                                 <%= link_to "See Game", game_path(game), class: "btn btn-dark btn-sm col-3 my-auto list-button"%>
-                              <% elsif game.state == "in progress" %>
+                              <% elsif game.state == "in progress" && game_opponent(game).present? %>
                                 <p class="col-8 my-auto dashboard-list-text">You are currently playing <%= game_opponent(game).username %>. It is <%= game.user_turn ? "your turn." : "your opponent's turn."%></p>
                                 <%= link_to "See Game", game_path(game), class: "btn btn-dark btn-sm col-3 my-auto list-button"%>
                               <% elsif game.state == "open" %>
@@ -220,8 +220,9 @@
                     <h6 class="card-title text-center pt-3">Games Open</h6>
                     <% if open_games.exists? %>
                         <% open_games.each do |game| %>
-                          <li class="list-group-item border-top rounded-0">
-                              <%= link_to "See Game", game_path(game), class: "btn btn-dark btn-sm col-3 my-auto list-button"%>
+                          <li class="list-group-item border-top rounded-0 text-center">
+                            <%= link_to "See Game", game_path(game), class: "btn btn-dark btn-sm col-3 mb-2 list-button"%>
+                            <p class="mx-3 my-auto">You started this game in <%= game.updated_at.strftime("%B, %Y") %>.</p>
                           </li>
                         <% end %>
                     <% else %>

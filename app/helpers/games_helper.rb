@@ -40,10 +40,21 @@ module GamesHelper
     end
   end
 
-  # def open_game_opponent(game)
-  #   opponent_id = game.user_id
-  #   return User.find(opponent_id)
-  # end
+  def open_game_opponent(game)
+    opponent_id = game.user_id
+    return User.find(opponent_id)
+  end
 
+  def opponent_won_amt(game)
+    return open_game_opponent(game).games.where(state: "won").count
+  end
+
+  def opponent_lost_amt(game)
+    return open_game_opponent(game).games.where(state: "lost").count
+  end
+
+  def opponent_game_amt(game)
+    return open_game_opponent(game).games.count
+  end
 
 end
