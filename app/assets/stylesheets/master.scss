@@ -46,6 +46,10 @@
   background-color: #D6B04F !important;
 }
 
+.btn-main {
+  background-color: #D6B04F !important;
+}
+
 body {
   font-family: 'Open Sans', sans-serif;
   background: #e5e5e5; /* fallback for old browsers */
@@ -409,4 +413,9 @@ background: #fff3;
 
 .chat-footer {
   height: 13vh;
+}
+
+#chat-message-input {
+  height: 10vh;
+  width: 100%;
 }

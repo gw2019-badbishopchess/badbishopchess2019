@@ -57,40 +57,6 @@
       </table>
     </div>
 
-
-
-  <div class="col-5 align-self-center">
-    <div class="card chat-room d-flex flex-column">
-      <div class="card-body chat-room">
-        <div class="messages-chatroom">
-          <% @game.chats.each do |chat| %>
-              <div class="col-11 <%= current_user.id == chat.user_id ? 'offset-1 message-sent' : 'message-recieved' %>">
-                <small class="chat-message-username"><%= chat.username %></small>
-                <p class="chat-message"><%= chat.message %></p>
-              </div>
-          <% end %>
-        </div>
-      </div>
-      <div class="card-footer text-muted d-flex align-items-end" id="chat-form">
-        <%= simple_form_for @chat,  
-                                    html: {  id: "chat-in", :class => "form-inline" },
-                                    input_html: { "data-type" => :json } do |f| %>
-          <div class="form row">
-            <div class="col-10">
-              <%= f.hidden_field 'username', value: current_user.username %>
-              <%= f.hidden_field 'game_id', value: @game.id %>
-              <%= f.hidden_field 'user_id', value: current_user.id %>
-              <%= f.input 'message', label: "Chat", id: "input-chat-message"%>
-            </div>
-            <div class="col-2">
-              <%= f.button :submit, "Chat", class: "btn-danger d-inline-flex justify-content-end", id: "submit-chat" %>
-            </div>
-          </div>
-        <% end %>
-      </div>
-    </div>
-  </div>
-</div>
   
   <div class="row d-flex justify-content-center">
      <% if @game.black_player_id.present? && @game.white_player_id.present? %>
@@ -111,7 +77,7 @@
   </div>
 <!--- for chat pop up-->
 <div class="btn-group dropup" id="chat-button">
-  <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+  <button type="button" class="btn btn-main dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
   Chat with your opponenet
   </button>
   <div class="dropdown-menu">
@@ -121,27 +87,20 @@
           <div class="messages-chatroom">
             <% @game.chats.each do |chat| %>
                 <div class="col-11 <%= current_user.id == chat.user_id ? 'offset-1 message-sent' : 'message-recieved' %>">
-                  <small class="chat-message-username"><%= chat.username %></small>
-                  <p class="chat-message"><%= chat.message %></p>
+                  <small class="chat-message-username"><%= chat.username %> <%= chat.updated_at.strftime("at %l:%M%p on %a %b %e") %></small>
+                  <p class="chat-message pb-1"><%= chat.message %></p>
+
                 </div>
             <% end %>
           </div>
         </div>
-        <div class="card-footer chat-footer bottom-footer text-muted d-flex align-items-end" id="chat-form">
-          <%= simple_form_for @chat,  
-                                      html: {  id: "chat-in", :class => "form-inline" },
+        <div class="card-footer chat-footer bottom-footer text-muted" id="chat-form">
+          <%= simple_form_for @chat,  html: {  id: "chat-in" },
                                       input_html: { "data-type" => :json } do |f| %>
-            <div class="form row">
-              <div class="col-10">
                 <%= f.hidden_field 'username', value: current_user.username %>
                 <%= f.hidden_field 'game_id', value: @game.id %>
                 <%= f.hidden_field 'user_id', value: current_user.id %>
-                <%= f.input 'message', label: "Chat", id: "input-chat-message"%>
-              </div>
-              <div class="col-2">
-                <%= f.button :submit, "Chat", class: "btn-danger d-inline-flex justify-content-end", id: "submit-chat" %>
-              </div>
-            </div>
+                <%= f.input 'message', label: false, placeholder: "Write something here...", wrapper_html: { id: 'chat-message-input' } %>
           <% end %>
         </div>
       </div>
@@ -160,6 +119,12 @@ $(document).ready($(function() {
   $('#close-button').click(function() {
     $('#myForm').css("display", "none");
   });
+  $("#chat-message-input").keypress(function(event) {
+    if (event.which == 13) {
+        event.preventDefault();
+        $("#chat-in").submit();
+    }
+});
   $('.piece').draggable({ 
       snap: 'droppable',
       revert: 'invalid'
@@ -200,7 +165,8 @@ $(document).ready($(function() {
 
 
 
-<script>  
+<script> 
+  
   function updateScroll() {
     var element = document.getElementById("#myForm");
     element.scrollTop = element.scrollHeight;
@@ -218,7 +184,9 @@ $(document).ready($(function() {
     $('#submit-chat').removeAttr("disabled");
     var htmlAdd = `<div class="col-11 ${classId()}"><small class="chat-message-username">${data.username}</small><p class="chat-message">${data.message}</p></div>`;
     $('.messages-chatroom').append(htmlAdd);
-    updateScroll();
+    alert('check!')
+    $('#myForm').scrollTop($('#myForm')[0].scrollHeight);
+    return updateScroll();
   });
 </script>
 
