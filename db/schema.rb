@@ -10,18 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_10_28_151148) do
+ActiveRecord::Schema.define(version: 2019_11_01_161038) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
-
-  create_table "chatrooms", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.integer "creator_id"
-    t.integer "game_id"
-    t.index ["creator_id"], name: "index_chatrooms_on_creator_id"
-  end
 
   create_table "chats", force: :cascade do |t|
     t.text "message"
@@ -30,8 +22,6 @@ ActiveRecord::Schema.define(version: 2019_10_28_151148) do
     t.datetime "updated_at", null: false
     t.integer "game_id"
     t.integer "user_id"
-    t.integer "chatroom_id"
-    t.index ["chatroom_id"], name: "index_chats_on_chatroom_id"
     t.index ["game_id"], name: "index_chats_on_game_id"
     t.index ["user_id"], name: "index_chats_on_user_id"
   end
@@ -49,12 +39,6 @@ ActiveRecord::Schema.define(version: 2019_10_28_151148) do
     t.integer "user_id"
     t.index ["black_player_id"], name: "index_games_on_black_player_id"
     t.index ["white_player_id"], name: "index_games_on_white_player_id"
-  end
-
-  create_table "jwt_blacklist", force: :cascade do |t|
-    t.string "jti", null: false
-    t.datetime "exp", null: false
-    t.index ["jti"], name: "index_jwt_blacklist_on_jti"
   end
 
   create_table "pieces", force: :cascade do |t|
