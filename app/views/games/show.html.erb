@@ -1,41 +1,59 @@
-  <div class="GameHeader">
-    <%= @game.name %>
-  </div>
+  <div class="row mt-5">
+    <div class="game-stats col-6 align-self-start">
+      <div class="card col-10 offset-1">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-6">
+              <h5 class="text-center"><%= current_user.username %></h5>
+              <h6 class="text-center"><%= user_game_piece_color %></h6>
+            </div>
+            <div class="col-6">
+              <% if opponent.present? %>
+                <h5 class="text-center"><%= opponent.username %></h5>
+                <h6 class="text-center"><%= opponent_game_piece_color %></h6>
+              <% else %>
+                <h6 class="text-center">Waiting for Opponent</h6>
+              <% end %>
+            </div>
+          </div>
+        </div>
+        <div class="row align-self-center">
+          <h2 class="text-center"><%= @game.game_turn %></h2>
+        </div>
+        <div class="row align-self-center m-3">
+          <div class="forfeit-button">
+            <% if @game.black_player_id.present? && @game.white_player_id.present? %>
+                <% if current_user.id == @game.white_player_id %>
+                  <%= simple_form_for @game, url: forfeit_game_path(@game) do |f| %>
+                    <%= f.hidden_field 'winning_user_id', value: @game.black_player_id %>
+                    <%= f.hidden_field 'state', value: 'forfeit' %>
+                    <span class="float-right"><%= f.submit "Forfeit", class: "btn btn-danger btn-lg" %></span>
+                  <% end %>
+                <% else %>
+                  <%= simple_form_for @game, url: forfeit_game_path(@game) do |f| %>
+                    <%= f.hidden_field 'winning_user_id', value: @game.white_player_id %>
+                    <%= f.hidden_field 'state', value: 'forfeit' %>
+                    <span class="float-right"><%= f.submit "Forfeit", class: "btn btn-danger btn-lg" %></span>
+                  <% end %>
+                <% end %>
+            <% end %>
+          </div>
+          <div class="castling">
+            <% if (!queenside_rook.nil? && legal_to_castle?(king_to_castle.x_coordinate - 2, king_to_castle.y_coordinate)) || (!kingside_rook.nil? && legal_to_castle?(king_to_castle.x_coordinate + 2, king_to_castle.y_coordinate)) %>
 
-<div class="row">
-  <div class="GameCurrentUserHeader col-6 text-center">
-    <h6>My username: <%= current_user.username %></h6>
-    <h6>I am playing for <%= user_game_piece_color %></h6>
-  </div>
-
-  <div class="GameOpponentHeader col-5 text-center">
-    <% if opponent.present? %>
-      <h6>My Opponent: <%= opponent.username %></h6>
-      <h6>They are <%= opponent_game_piece_color %></h6>
-    <% else %>
-      <p> Waiting for Player... </p>
-    <% end %>
-  </div>
-</div>
-
-<body>
-  <br/>
-  <br/>
-  <div class="castling">
-    <% if (!queenside_rook.nil? && legal_to_castle?(king_to_castle.x_coordinate - 2, king_to_castle.y_coordinate)) || (!kingside_rook.nil? && legal_to_castle?(king_to_castle.x_coordinate + 2, king_to_castle.y_coordinate)) %>
-
-      <% if !queenside_rook.nil? && legal_to_castle?(king_to_castle.x_coordinate - 2, king_to_castle.y_coordinate) %>
-        <%= link_to 'Your Queenside Rook', castling_piece_path(queenside_rook), class: 'btn btn-info btn-sm', method: :put %>
-      <% end %>
-      <br />
-      <% if !kingside_rook.nil? && legal_to_castle?(king_to_castle.x_coordinate + 2, king_to_castle.y_coordinate) %>
-        <%= link_to 'Your Kingside Rook', castling_piece_path(kingside_rook), class: 'btn btn-info btn-sm', method: :put %>
-      <% end %>
-    <% end %>
-  </div> 
-
-  <div class="row">
-    <div class="chessboard col-6 align-self-center">
+              <% if !queenside_rook.nil? && legal_to_castle?(king_to_castle.x_coordinate - 2, king_to_castle.y_coordinate) %>
+                <%= link_to 'Your Queenside Rook', castling_piece_path(queenside_rook), class: 'btn btn-info btn-sm', method: :put %>
+              <% end %>
+              <br />
+              <% if !kingside_rook.nil? && legal_to_castle?(king_to_castle.x_coordinate + 2, king_to_castle.y_coordinate) %>
+                <%= link_to 'Your Kingside Rook', castling_piece_path(kingside_rook), class: 'btn btn-info btn-sm', method: :put %>
+              <% end %>
+            <% end %>
+          </div> 
+        </div>
+      </div>
+    </div>
+    <div class="chessboard col-6 align-self-start">
       <table>
         <tbody>
             <% (1..8).each do |y_coord| %>
@@ -55,61 +73,47 @@
             <% end %>
         </tbody>
       </table>
+      <br />
     </div>
+  </div>
 
   
-  <div class="row d-flex justify-content-center">
-     <% if @game.black_player_id.present? && @game.white_player_id.present? %>
-          <% if current_user.id == @game.white_player_id %>
-            <%= simple_form_for @game, url: forfeit_game_path(@game) do |f| %>
-              <%= f.hidden_field 'winning_user_id', value: @game.black_player_id %>
-              <%= f.hidden_field 'state', value: 'forfeit' %>
-              <span class="float-right"><%= f.submit "Forfeit", class: "btn btn-danger btn-lg" %></span>
-            <% end %>
-          <% else %>
-            <%= simple_form_for @game, url: forfeit_game_path(@game) do |f| %>
-              <%= f.hidden_field 'winning_user_id', value: @game.white_player_id %>
-              <%= f.hidden_field 'state', value: 'forfeit' %>
-              <span class="float-right"><%= f.submit "Forfeit", class: "btn btn-danger btn-lg" %></span>
-            <% end %>
-          <% end %>
-      <% end %>
-  </div>
-<!--- for chat pop up-->
-<div class="btn-group dropup" id="chat-button">
-  <button type="button" class="btn btn-main dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-  Chat with your opponenet
-  </button>
-  <div class="dropdown-menu">
-    <div class="chat-popup overflow-auto" id="myForm">
-      <div class="card">
-        <div class="card-body chat-body overflow-auto">
-          <div class="messages-chatroom">
-            <% @game.chats.each do |chat| %>
-                <div class="col-11 <%= current_user.id == chat.user_id ? 'offset-1 message-sent' : 'message-recieved' %>">
-                  <small class="chat-message-username"><%= chat.username %> <%= chat.updated_at.strftime("at %l:%M%p on %a %b %e") %></small>
-                  <p class="chat-message pb-1"><%= chat.message %></p>
 
-                </div>
+  <!--- for chat pop up-->
+  <div class="btn-group dropup" id="chat-button">
+    <button type="button" class="btn btn-main dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Chat with your opponenet
+    </button>
+    <div class="dropdown-menu">
+      <div class="chat-popup overflow-auto" id="myForm">
+        <div class="card">
+          <div class="card-body chat-body overflow-auto">
+            <div class="messages-chatroom">
+              <% @game.chats.each do |chat| %>
+                  <div class="col-11 <%= current_user.id == chat.user_id ? 'offset-1 message-sent' : 'message-recieved' %>">
+                    <small class="chat-message-username"><%= chat.username %> <%= chat.updated_at.strftime("at %l:%M%p on %a %b %e") %></small>
+                    <p class="chat-message pb-1"><%= chat.message %></p>
+
+                  </div>
+              <% end %>
+            </div>
+          </div>
+          <div class="card-footer chat-footer bottom-footer text-muted" id="chat-form">
+            <%= simple_form_for @chat,  html: {  id: "chat-in" },
+                                        input_html: { "data-type" => :json } do |f| %>
+                  <%= f.hidden_field 'username', value: current_user.username %>
+                  <%= f.hidden_field 'game_id', value: @game.id %>
+                  <%= f.hidden_field 'user_id', value: current_user.id %>
+                  <%= f.input 'message', label: false, placeholder: "Write something here...", wrapper_html: { id: 'chat-message-input' } %>
             <% end %>
           </div>
         </div>
-        <div class="card-footer chat-footer bottom-footer text-muted" id="chat-form">
-          <%= simple_form_for @chat,  html: {  id: "chat-in" },
-                                      input_html: { "data-type" => :json } do |f| %>
-                <%= f.hidden_field 'username', value: current_user.username %>
-                <%= f.hidden_field 'game_id', value: @game.id %>
-                <%= f.hidden_field 'user_id', value: current_user.id %>
-                <%= f.input 'message', label: false, placeholder: "Write something here...", wrapper_html: { id: 'chat-message-input' } %>
-          <% end %>
-        </div>
       </div>
     </div>
-  </div>
-</div> 
+  </div> 
 
 
-</body>
+
 
 <script>
 $(document).ready($(function() {
