@@ -10,7 +10,6 @@ class Game < ApplicationRecord
     pieces.where('(x_coordinate = ? AND y_coordinate = ?)', x_coord, y_coord)
   end
 
-
   def populate_board!
     #White Pieces
       #Pawns

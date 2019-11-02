@@ -1,6 +1,11 @@
 class Piece < ApplicationRecord
   has_one :user # Creating pieces to user association
   belongs_to :game # Creating pieces to game association
+  after_update :notify_pusher
+
+  def notify_pusher
+    Pusher.trigger('move', 'update', {:message => 'hello world'})
+  end
 
   
   # The occupied? method checks whether there is a piece a at (x, y)

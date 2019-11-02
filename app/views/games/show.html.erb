@@ -188,9 +188,17 @@ $(document).ready($(function() {
     $('#submit-chat').removeAttr("disabled");
     var htmlAdd = `<div class="col-11 ${classId()}"><small class="chat-message-username">${data.username}</small><p class="chat-message">${data.message}</p></div>`;
     $('.messages-chatroom').append(htmlAdd);
-    alert('check!')
     $('#myForm').scrollTop($('#myForm')[0].scrollHeight);
     return updateScroll();
   });
 </script>
-
+<script>
+  var pusher = new Pusher('<%= ENV["PUSHER_KEY"] %>', {
+    cluster: '<%= ENV["PUSHER_CLUSTER"] %>'
+    }
+  );
+  var channel = pusher.subscribe('move');
+  channel.bind('update', function(data) {
+    location.reload(true);
+    });
+</script>
