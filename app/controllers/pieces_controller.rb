@@ -11,10 +11,12 @@ class PiecesController < ApplicationController
   def update
     @piece = Piece.find(params[:id])
     @game = @piece.game
+    return flash[:danger] = "It is not your turn!" unless @game.game_turn == current_user.id 
     if @piece.move_to!(piece_params)
     else 
-      flash[:danger] = "You have made an illegal move!"
+      return flash[:danger] = "You have made an illegal move!"
     end
+    switch_turns
     flash[:danger] = "The King is in Check!" if @piece.check_to_king? 
   end
 
@@ -35,6 +37,7 @@ class PiecesController < ApplicationController
       @king.castle(castling_x_coord, @king.y_coordinate)
     else flash[:danger] = 'You cannot castle.'
     end
+    switch_turns
     redirect_to game_path(@game)
   end
 
@@ -44,7 +47,16 @@ class PiecesController < ApplicationController
     @rook.x_coordinate == 1 ? 3 : 7
   end
 
+  def switch_turns
+    if @game.white_player_id == @game.game_turn
+      @game.update_attributes(game_turn: @game.black_player_id)
+    else
+      @game.update_attributes(game_turn: @game.white_player_id)
+    end
+  end
+
   def piece_params
     params.require(:piece).permit(:id, :x_coordinate, :y_coordinate, :captured, :user_id, :game_id, :white_player_id, :black_player_id, :type)
   end
+
 end

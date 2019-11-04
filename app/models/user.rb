@@ -1,13 +1,13 @@
 class User < ApplicationRecord
   has_many :pieces # Creating user to pieces association
   has_many :games # Creating user to games association
-
+  has_many :chats # assoication for chatting agmounst users
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable,
-         #:omniauthable, :omniauth_providers => [:facebook, :twitter] #this added the omni links in routes
-          :omniauthable, :omniauth_providers => [:facebook, :twitter, :google_oauth2]
+        :omniauthable, :omniauth_providers => [:facebook, :twitter, :google_oauth2]
+
 
 #this was suggested by tutorials Wilson suggested so users can log in with social media
 #makes the pair (provider :socialmedia, uid: your_uid) match and creates them if they aren't in db

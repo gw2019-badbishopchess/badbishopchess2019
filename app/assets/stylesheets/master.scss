@@ -2,7 +2,7 @@
 @import url('https://fonts.googleapis.com/css?family=Noto+Sans|Open+Sans&display=swap');
 
 .badBishop {
-  background-color: #feda6a;
+  background-color: #D6B04F;
   padding: 15px 10px 15px 10px;
 }
 
@@ -11,26 +11,12 @@
   padding-left: 20px;
 }
 
-h1, .h1 {
-  font-size: 3.5rem;
-}
+// h1, .h1 {
+//   font-size: 3.5rem;
+// }
 
 .badBishopMain {
   margin: 11% 0% 0% 0%;
-}
-
-.subtitle {
-  text-align: center;
-}
-
-.column-left {
-  width: 50%;
-  padding: 0% 0% 0% 40%;
-}
-
-.column-right {
-  width: 50%;
-  padding: 0.5% 40% 0% 0%;
 }
 
 .row:after {
@@ -41,11 +27,27 @@ h1, .h1 {
 
 .navbar {
   font-family: 'Noto Sans', sans-serif;
+  font-color: #0d0d0e;
   box-shadow: 0 0.25rem 0.125rem 0 rgba(0,0,0,0.05);
+  position: sticky;
+  top: 0;
+  z-index: 1030;
 }
 
-.bg-light {
-  background-color: #feda6a !important;
+.navbar-light .navbar-nav .nav-link {
+    color: rgba(0, 0, 0, 0.6);
+}
+
+.navbar-light .navbar-nav .nav-link:hover, .navbar-light .navbar-nav .nav-link:focus {
+    color: rgba(0, 0, 0, 0.8);
+}
+
+.bg-main {
+  background-color: #D6B04F !important;
+}
+
+.btn-main {
+  background-color: #D6B04F !important;
 }
 
 body {
@@ -72,10 +74,50 @@ tr:nth-child(odd) td:nth-child(even), tr:nth-child(even) td:nth-child(odd) {
 }
 
 .btn-primary {
-  color: #feda6a;
+  color: #D6B04F;
   background-color: #eef2f3;
-  border-color: #feda6a;
+  border-color: #D6B04F;
 }
+
+
+.alert-error {
+  background-color: #f2dede;
+  border-color: #eed3d7;
+  color: #b94a48;
+  text-align: left;
+}
+
+.alert-alert {
+  background-color: #f2dede;
+  border-color: #eed3d7;
+  color: #b94a48;
+  text-align: left;
+}
+
+.alert-success {
+  background-color: #dff0d8;
+  border-color: #d6e9c6;
+  color: #468847;
+  text-align: left;
+}
+
+.alert-notice {
+  background-color: #dff0d8;
+  border-color: #d6e9c6;
+  color: #468847;
+  text-align: left;
+}
+
+ .was-validated .form-control:valid, .form-control.is-valid, 
+ .form-control.is-valid:focus, .form-check-input.is-valid ~ .form-check-label {
+    color: black;
+    border: none;
+    box-shadow: none;
+ }
+
+ .form-control {
+   transition: none;
+ }
 
 .GameHeader {
   text-align: center;
@@ -104,10 +146,276 @@ tr:nth-child(odd) td:nth-child(even), tr:nth-child(even) td:nth-child(odd) {
   font-size: 2rem;
 }
 
-.last-moved-piece {
-  background: green;
+/*
+ * Sidebar
+ */
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 100; /* Behind the navbar */
+  padding: 48px 0 0; /* Height of navbar */
+  box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
 }
 
-.ui-droppable-hover {
-  border: red;
+.sidebar-sticky {
+  position: relative;
+  top: 0;
+  height: calc(100vh - 48px);
+  padding-top: .5rem;
+  overflow-x: hidden;
+  overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+}
+
+@supports ((position: -webkit-sticky) or (position: sticky)) {
+  .sidebar-sticky {
+    position: -webkit-sticky;
+    position: sticky;
+  }
+}
+
+.sidebar .nav-link {
+  font-weight: 500;
+  color: #333;
+}
+
+.sidebar .nav-link .feather {
+  margin-right: 4px;
+  color: #999;
+}
+
+.sidebar .nav-link.active {
+  color: #007bff;
+}
+
+.sidebar .nav-link:hover .feather,
+.sidebar .nav-link.active .feather {
+  color: inherit;
+}
+
+.sidebar-heading {
+  font-size: .75rem;
+  text-transform: uppercase;
+}
+
+main {
+   display: block;
+}
+
+.list-group-item, .list-group-item-action:hover, .list-group-item-action:focus {
+  background: transparent;
+  border: none;
+}
+
+.list-group-item-action:hover, .list-group-item-action:focus {
+  font-weight:bold;
+  text-decoration: underline;
+}
+
+.list-group-item.active {
+    background-color: transparent;
+    border-color: transparent;
+    color: #495057;
+}
+
+// for styling forms
+
+.btn-danger {
+  background-color: #AD0932;
+  border-color: #AD0932;
+}
+
+.omni-btn {
+  font-size: 1vw;
+}
+
+// this is for devise new views 
+
+.login-container {
+  border-radius: 3px;
+}
+
+.full-page {
+  height: 100vh;
+}
+
+.left {
+  overflow-y: scroll;
+  height: 86vh;
+}
+
+.bg-warning {
+  background-color: #D6B04F  !important;
+}
+
+.active-user {
+  border-radius: 3px;
+  padding-left: 0.5rem;
+  font-weight: 900;
+  margin-right: 0.5rem;
+  .online-icon {
+    border-radius: 50%;
+    width: 0.5rem;
+    height: 0.5rem;
+  }
+}
+.left::-webkit-scrollbar {
+width: 0.3rem;
+}
+.left::-webkit-scrollbar-thumb {
+background: #fff3; 
+}
+
+// dashboard
+.dashboard-list-text {
+  font-size: 0.85rem;
+}
+
+.list-button {
+  font-size: 0.85rem;
+  -moz-box-shadow: 1px 1px 2px 0 #3b3b3b;
+  -webkit-box-shadow: 1px 1px 2px 0 #3b3b3b;
+  box-shadow: 1px 1px 2px 0 #3b3b3b;
+}
+
+.hero {
+  background: image_url('hero2.jpg') no-repeat top center;;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  height: 100vh;
+  background-size: cover;
+  color: #F2F2F2;
+}
+
+.index-body {
+  background-color: #141823;
+}
+
+#new-game-nav-link {
+  cursor: pointer;
+}
+
+.stats-against {
+  font-size: 0.5rem !important;
+}
+
+.stats-header {
+  font-size: 0.9rem !important;
+}
+
+.btn-dark:hover {
+    color: #23272b;
+    background-color: transparent;
+    border-color: #1d2124
+}
+
+.open-stats {
+  font-size: 0.85rem !important;
+}
+
+.open-your-game {
+  font-size: 0.7rem !important;
+}
+
+// chat 
+// chatroom
+.chat-room {
+  height: 70vh;
+  font-size: 0.85rem;
+  // font-size: 50% !important;
+}
+
+.chat-message, .chat-message-username {
+  font-size: 0.85rem;
+  margin-bottom: 2px !important;
+}
+
+
+#chat-input {
+  font-size: 0.85rem;
+}
+
+.chat-message-username {
+  font-size: 0.55rem;
+}
+
+.message-sent {
+	position: relative;
+	background-color: rgba(20,24,36,0.1);  
+	border-radius: .4em;
+}
+
+.message-sent:after {
+	content: '';
+	position: absolute;
+	right: 0;
+	top: 50%;
+	width: 0;
+	height: 0;
+	border: 0.625em solid transparent;
+	border-left-color: rgba(20,24,36,0.1);  
+	border-right: 0;
+	border-bottom: 0;
+	margin-top: -0.312em;
+	margin-right: -0.625em;
+}
+
+.message-recieved {
+	position: relative;
+	background: rgba(112,92,42,0.2);  
+	border-radius: .4em;
+}
+
+.message-recieved:after {
+	content: '';
+	position: absolute;
+	left: 0;
+	top: 50%;
+	width: 0;
+	height: 0;
+	border: 0.625em solid transparent;
+	border-right-color: rgba(112,92,42,0.1); 
+	border-left: 0;
+	border-bottom: 0;
+	margin-top: -0.312em;
+	margin-left: -0.625em;
+}
+
+#chat-button {
+  position: fixed;
+  bottom: 23px;
+  left: 28px;
+  width: 280px;
+}
+
+.chat-popup {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  border: 3px solid #f1f1f1;
+  z-index: 9;
+  width: 400px;
+  height: 70vh;
+  padding: 10px;
+  background-color: white;
+}
+
+#chat-form {
+  position: sticky;
+}
+
+.chat-body {
+  height: 52vh;
+}
+
+.chat-footer {
+  height: 13vh;
+}
+
+#chat-message-input {
+  height: 10vh;
+  width: 100%;
 }

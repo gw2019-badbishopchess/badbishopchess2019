@@ -1,9 +1,15 @@
 class Game < ApplicationRecord
   has_many :pieces # Creating game to pieces association
   belongs_to :user # Creating game to users association
+  has_many :chats
 
   scope :available, -> { where state: 'open' } # to help find which games are available
   after_create :populate_board!
+  after_update :notify_pusher
+
+  def notify_pusher
+    Pusher.trigger('move', 'update', self.as_json)
+  end
 
   def render_piece(x_coord, y_coord)
     pieces.where('(x_coordinate = ? AND y_coordinate = ?)', x_coord, y_coord)

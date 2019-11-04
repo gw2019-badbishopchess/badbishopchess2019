@@ -1,117 +1,207 @@
-<% if @game.present? %>
-  <div class="GameHeader">
-    <%= @game.name %>
-  </div>
+  <div class="row mt-5">
+    <div class="game-stats col-6 align-self-start">
+      <div class="card col-10 offset-1">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-6">
+              <h5 class="text-center">I am <%= current_user.username %> - #<%= current_user.id %></h5>
+              <h6 class="text-center"><%= user_game_piece_color %></h6>
+            </div>
+            <div class="col-6">
+              <% if opponent.present? %>
+                <h5 class="text-center"><%= opponent.username %> - #<%= opponent.id %></h5>
+                <h6 class="text-center"><%= opponent_game_piece_color %></h6>
+              <% else %>
+                <h6 class="text-center">Waiting for Opponent</h6>
+              <% end %>
+            </div>
+          </div>
+        </div>
+        <div class="row align-self-center">
+          <h2 class="text-center game-turn-username"><%= game_turn_username %>'s turn</h2>
+        </div>
+        <div class="row align-self-center m-3">
+          <div class="forfeit-button">
+            <% if @game.black_player_id.present? && @game.white_player_id.present? %>
+                <% if current_user.id == @game.white_player_id %>
+                  <%= simple_form_for @game, url: forfeit_game_path(@game) do |f| %>
+                    <%= f.hidden_field 'winning_user_id', value: @game.black_player_id %>
+                    <%= f.hidden_field 'state', value: 'forfeit' %>
+                    <span class="float-right"><%= f.submit "Forfeit", class: "btn btn-danger btn-lg" %></span>
+                  <% end %>
+                <% else %>
+                  <%= simple_form_for @game, url: forfeit_game_path(@game) do |f| %>
+                    <%= f.hidden_field 'winning_user_id', value: @game.white_player_id %>
+                    <%= f.hidden_field 'state', value: 'forfeit' %>
+                    <span class="float-right"><%= f.submit "Forfeit", class: "btn btn-danger btn-lg" %></span>
+                  <% end %>
+                <% end %>
+            <% end %>
+          </div>
+          <div class="castling">
+            <% if (!queenside_rook.nil? && legal_to_castle?(king_to_castle.x_coordinate - 2, king_to_castle.y_coordinate)) || (!kingside_rook.nil? && legal_to_castle?(king_to_castle.x_coordinate + 2, king_to_castle.y_coordinate)) %>
 
-  <div class="GameSubHeader">
-    <div class="WhitePlayerName">
-      White Player's Id: <%= @game.white_player_id %>
+              <% if !queenside_rook.nil? && legal_to_castle?(king_to_castle.x_coordinate - 2, king_to_castle.y_coordinate) %>
+                <%= link_to 'Your Queenside Rook', castling_piece_path(queenside_rook), class: 'btn btn-info btn-sm', method: :put %>
+              <% end %>
+              <br />
+              <% if !kingside_rook.nil? && legal_to_castle?(king_to_castle.x_coordinate + 2, king_to_castle.y_coordinate) %>
+                <%= link_to 'Your Kingside Rook', castling_piece_path(kingside_rook), class: 'btn btn-info btn-sm', method: :put %>
+              <% end %>
+            <% end %>
+          </div> 
+        </div>
+      </div>
     </div>
-<% end %>
-
-  <div class="BlackPlayerName">
-    <% if @game.black_player_id.present? %>
-      Black Player's Id: <%= @game.black_player_id %>
-    <% else %>
-      <p> Waiting for Player... </p>
-    <% end %>
-  </div>
-</div>
-
-<body>
-  <br/>
-  <br/>
-  <div class="castling">
-    <% if (!queenside_rook.nil? && legal_to_castle?(king_to_castle.x_coordinate - 2, king_to_castle.y_coordinate)) || (!kingside_rook.nil? && legal_to_castle?(king_to_castle.x_coordinate + 2, king_to_castle.y_coordinate)) %>
-
-      <% if !queenside_rook.nil? && legal_to_castle?(king_to_castle.x_coordinate - 2, king_to_castle.y_coordinate) %>
-        <%= link_to 'Your Queenside Rook', castling_piece_path(queenside_rook), class: 'btn btn-info btn-sm', method: :put %>
-      <% end %>
+    <div class="chessboard col-6 align-self-start">
+      <table>
+        <tbody>
+            <% (1..8).each do |y_coord| %>
+              <tr id = <%= y_coord %>>
+                <% (1..8).each do |x_coord| %>
+                  <td data-x-coord= <%= x_coord %> data-y-coord= <%= y_coord %> 
+                      class = droppable 
+                      <%= "#{(y_coord % 2 == x_coord % 2 ? "white-square droppable-square" : "black-square droppable-square")}" %> >
+                        <% if boardpiece = @pieces.where("(x_coordinate = ? AND y_coordinate = ?)", x_coord, y_coord).first %>
+                          <span class= "piece" data-id=<%= boardpiece.id %> id="<%= boardpiece.id %>" data-x-coord= <%= x_coord %> data-y-coord= <%= y_coord %> >
+                            <%= image_tag boardpiece.image %>
+                          </span> 
+                        <% end %>
+                  </td>
+                <% end %>
+              </tr>
+            <% end %>
+        </tbody>
+      </table>
       <br />
-      <% if !kingside_rook.nil? && legal_to_castle?(king_to_castle.x_coordinate + 2, king_to_castle.y_coordinate) %>
-        <%= link_to 'Your Kingside Rook', castling_piece_path(kingside_rook), class: 'btn btn-info btn-sm', method: :put %>
-      <% end %>
-    <% end %>
+    </div>
+  </div>
+
+  
+
+  <!--- for chat pop up-->
+  <div class="btn-group dropup" id="chat-button">
+    <button type="button" class="btn btn-main dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Chat with your opponenet
+    </button>
+    <div class="dropdown-menu">
+      <div class="chat-popup overflow-auto" id="myForm">
+        <div class="card">
+          <div class="card-body chat-body overflow-auto">
+            <div class="messages-chatroom">
+              <% @game.chats.each do |chat| %>
+                  <div class="col-11 <%= current_user.id == chat.user_id ? 'offset-1 message-sent' : 'message-recieved' %>">
+                    <small class="chat-message-username"><%= chat.username %> <%= chat.updated_at.strftime("at %l:%M%p on %a %b %e") %></small>
+                    <p class="chat-message pb-1"><%= chat.message %></p>
+
+                  </div>
+              <% end %>
+            </div>
+          </div>
+          <div class="card-footer chat-footer bottom-footer text-muted" id="chat-form">
+            <%= simple_form_for @chat,  html: {  id: "chat-in" },
+                                        input_html: { "data-type" => :json } do |f| %>
+                  <%= f.hidden_field 'username', value: current_user.username %>
+                  <%= f.hidden_field 'game_id', value: @game.id %>
+                  <%= f.hidden_field 'user_id', value: current_user.id %>
+                  <%= f.input 'message', label: false, placeholder: "Write something here...", wrapper_html: { id: 'chat-message-input' } %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
   </div> 
 
-  <div class="chessboard col-6">
-    <table>
-      <tbody>
-          <% (1..8).each do |y_coord| %>
-            <tr id = <%= y_coord %>>
-              <% (1..8).each do |x_coord| %>
-                <td data-x-coord= <%= x_coord %> data-y-coord= <%= y_coord %> 
-                    class = droppable 
-                    <%= "#{(y_coord % 2 == x_coord % 2 ? "white-square droppable-square" : "black-square droppable-square")}" %> >
-                      <% if boardpiece = @pieces.where("(x_coordinate = ? AND y_coordinate = ?)", x_coord, y_coord).first %>
-                        <span class= "piece" data-id=<%= boardpiece.id %> id="<%= boardpiece.id %>" data-x-coord= <%= x_coord %> data-y-coord= <%= y_coord %> >
-                          <%= image_tag boardpiece.image %>
-                        </span> 
-                      <% end %>
-                </td>
-              <% end %>
-            </tr>
-          <% end %>
-      </tbody>
-    </table>
-  </div>
-  <div>
-     <% if @game.black_player_id.present? && @game.white_player_id.present? %>
-        
-          <% if current_user.id == @game.white_player_id %>
-            <%= simple_form_for @game, url: forfeit_game_path(@game) do |f| %>
-              <%= f.hidden_field 'winning_user_id', value: @game.black_player_id %>
-              <%= f.hidden_field 'state', value: 'forfeit' %>
-              <span class="float-right"><%= f.submit "Forfeit", class: "btn btn-danger btn-lg" %></span>
-            <% end %>
-          <% else %>
-            <%= simple_form_for @game, url: forfeit_game_path(@game) do |f| %>
-              <%= f.hidden_field 'winning_user_id', value: @game.white_player_id %>
-              <%= f.hidden_field 'state', value: 'forfeit' %>
-              <span class="float-right"><%= f.submit "Forfeit", class: "btn btn-danger btn-lg" %></span>
-            <% end %>
-          <% end %>
-      <% end %>
-  </div>
-</body>
+
+
 
 <script>
 $(document).ready($(function() {
-    $('.piece').draggable({ 
-        snap: 'droppable',
-        revert: 'invalid'
-      });
-    $('.droppable').droppable({
-        drop: function(event, ui) {
-          let piece = ui.draggable
-          let destination_square = $(this);
-          var update_piece = {
-            id: piece.data('id'),
-            game_id: piece.data('game-id'),
-            x_coordinate: destination_square.data('x-coord'),
-            y_coordinate: destination_square.data('y-coord')
-          }
-          $.ajax({
-            type: 'PUT',
-            url: `/pieces/${update_piece.id}`,
-            // beforeSend: function(xhr) { xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content')) },
-            dataType: 'json',
-            data: {
-              piece: {
-                game_id: update_piece.game_id, 
-                id: update_piece.id,
-                x_coordinate: update_piece.x_coordinate,
-                y_coordinate: update_piece.y_coordinate
-              },
+  $('#chat-button').click(function() {
+    $('#myForm').css("display", "block");
+  });
+  $('#close-button').click(function() {
+    $('#myForm').css("display", "none");
+  });
+  $("#chat-message-input").keypress(function(event) {
+    if (event.which == 13) {
+        event.preventDefault();
+        $("#chat-in").submit();
+    }
+});
+  $('.piece').draggable({ 
+      snap: 'droppable',
+      revert: 'invalid'
+    });
+  $('.droppable').droppable({
+      drop: function(event, ui) {
+        let piece = ui.draggable
+        let destination_square = $(this);
+        var update_piece = {
+          id: piece.data('id'),
+          game_id: piece.data('game-id'),
+          x_coordinate: destination_square.data('x-coord'),
+          y_coordinate: destination_square.data('y-coord')
+        }
+        $.ajax({
+          type: 'PUT',
+          url: `/pieces/${update_piece.id}`,
+          dataType: 'json',
+          data: {
+            piece: {
+              game_id: update_piece.game_id, 
+              id: update_piece.id,
+              x_coordinate: update_piece.x_coordinate,
+              y_coordinate: update_piece.y_coordinate
             },
-            success: function(data) {
-              destination_square.empty();
-              location.reload(true);
-            }
-          });
-        }  
-      });    
-      
-    }));
+          },
+          success: function(data) {
+            destination_square.empty();
+            location.reload(true);
+
+          },
+          error: function(data) {
+            location.reload(true)
+          }
+        });
+      }  
+    });    
+    
+  }));
 </script>
 
+
+
+<script> 
+  
+  function updateScroll() {
+    var element = document.getElementById("#myForm");
+    element.scrollTop = element.scrollHeight;
+  }
+  var pusher = new Pusher('<%= ENV["PUSHER_KEY"] %>', {
+    cluster: '<%= ENV["PUSHER_CLUSTER"] %>'
+    }
+  );
+  var channel = pusher.subscribe('chat');
+  channel.bind('new', function(data) {
+    function classId() {
+      return <%= current_user.id %> == data.user_id ? 'offset-1 message-sent' : 'message-recieved'
+    }
+    $('#chat_message').val("");
+    $('#submit-chat').removeAttr("disabled");
+    var htmlAdd = `<div class="col-11 ${classId()}"><small class="chat-message-username">${data.username}</small><p class="chat-message">${data.message}</p></div>`;
+    $('.messages-chatroom').append(htmlAdd);
+    $('#myForm').scrollTop($('#myForm')[0].scrollHeight);
+    return updateScroll();
+  });
+</script>
+<script>
+  var pusher = new Pusher('<%= ENV["PUSHER_KEY"] %>', {
+    cluster: '<%= ENV["PUSHER_CLUSTER"] %>'
+    }
+  );
+  var channel = pusher.subscribe('move');
+  channel.bind('update', function(data) {
+    location.reload(true);
+    });
+</script>

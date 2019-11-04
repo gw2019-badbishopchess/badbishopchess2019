@@ -13,11 +13,13 @@ class GamesController < ApplicationController
   def show
     @game = Game.find_by_id(params[:id])
     @pieces = @game.pieces
+    @chat = Chat.new
+    @chats = Chat.all
   end
 
   def index
     @unmatched_games = Game.where(:state => 'open')
-
+    @games = Game.all
   end
 
   def update
@@ -27,11 +29,11 @@ class GamesController < ApplicationController
 
   def join
     @game = Game.find_by_id(params[:id])
-    if current_user.id != @game.white_player_id
+    if current_user.id != @game.user_id
       @game.update_attributes(game_params)
        redirect_to game_path(@game)
     else
-      flash[:alert] = "Error: You are already a player in this game!!" 
+      flash[:error] = "Error: You are already a player in this game!!" 
       redirect_to games_path
     end
   end
@@ -45,6 +47,7 @@ class GamesController < ApplicationController
   private
 
   def game_params
-    params.require(:game).permit(:name, :user_id, :white_player_id, :black_player_id, :state, :winning_user_id)
+    params.require(:game).permit(:name, :user_id, :white_player_id, :black_player_id, :state, :winning_user_id, :username, :game_turn)
   end
+
 end

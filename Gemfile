@@ -62,13 +62,14 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 # Installs devise
 gem 'devise'
+gem 'devise-jwt', '~> 0.5.9'
 
 # Installs jquery
 gem 'jquery-rails'
 
 # Installs front-end framework
-gem 'popper_js', '~> 1.11.1'
-gem 'bootstrap'
+gem 'popper_js', '~> 1.14.5'
+gem "bootstrap", ">= 4.3.1"
 
 source 'https://rails-assets.org' do
   gem 'rails-assets-tether', '>= 1.3.3'
@@ -77,7 +78,7 @@ end
 # Installs rubocop
 gem 'rubocop', '~> 0.74.0', require: false
 # Installs simple form
-gem 'simple_form'
+gem "simple_form", ">= 5.0.0"
 # Installs Omniauth - base gem - allowing specific SM to be installed easier
 gem 'omniauth'
 # Installs Omniauth - facebook 
@@ -94,3 +95,8 @@ group :development, :test do
 end
 
 gem 'jquery-ui-rails'
+# to get charts in dashboard
+gem 'chart-js-rails'
+gem 'pusher'
+#installs pusher's chat system
+gem 'pusher-chatkit-server'

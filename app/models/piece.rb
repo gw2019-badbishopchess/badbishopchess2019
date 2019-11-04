@@ -1,8 +1,13 @@
 class Piece < ApplicationRecord
   has_one :user # Creating pieces to user association
   belongs_to :game # Creating pieces to game association
+  after_update :notify_pusher
 
-  
+  def notify_pusher
+    Pusher.trigger('move', 'update', self.as_json)
+  end
+
+
   # The occupied? method checks whether there is a piece a at (x, y)
   # args = x coordinate and y coordinate of space
   # returns true if occupied, false if unoccupied 
@@ -129,6 +134,14 @@ class Piece < ApplicationRecord
     return false unless self.contains_own_piece?(piece_params[:x_coordinate], piece_params[:y_coordinate]) == false 
     return false if self.is_obstructed?([piece_params[:x_coordinate], piece_params[:y_coordinate]]) == true && self.type != 'Knight'
     return true if self.update_attributes(x_coordinate: piece_params[:x_coordinate], y_coordinate: piece_params[:y_coordinate], piece_move_count: (piece_move_count + 1))
+  end
+
+  def opponent_id
+    if game.white_player_id == self.user_id
+      return game.white_player_id
+    else
+      return game.black_player_id
+    end
   end
 
 
