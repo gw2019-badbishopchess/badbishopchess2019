@@ -5,6 +5,11 @@ class Game < ApplicationRecord
 
   scope :available, -> { where state: 'open' } # to help find which games are available
   after_create :populate_board!
+  after_update :notify_pusher
+
+  def notify_pusher
+    Pusher.trigger('move', 'update', self.as_json)
+  end
 
   def render_piece(x_coord, y_coord)
     pieces.where('(x_coordinate = ? AND y_coordinate = ?)', x_coord, y_coord)

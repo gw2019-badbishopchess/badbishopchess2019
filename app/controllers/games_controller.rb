@@ -29,7 +29,7 @@ class GamesController < ApplicationController
 
   def join
     @game = Game.find_by_id(params[:id])
-    if current_user.id != @game.white_player_id
+    if current_user.id != @game.user_id
       @game.update_attributes(game_params)
        redirect_to game_path(@game)
     else
@@ -47,7 +47,7 @@ class GamesController < ApplicationController
   private
 
   def game_params
-    params.require(:game).permit(:name, :user_id, :white_player_id, :black_player_id, :state, :winning_user_id, :username)
+    params.require(:game).permit(:name, :user_id, :white_player_id, :black_player_id, :state, :winning_user_id, :username, :game_turn)
   end
 
 end

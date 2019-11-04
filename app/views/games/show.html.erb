@@ -4,12 +4,12 @@
         <div class="card-body">
           <div class="row">
             <div class="col-6">
-              <h5 class="text-center"><%= current_user.username %></h5>
+              <h5 class="text-center">I am <%= current_user.username %> - #<%= current_user.id %></h5>
               <h6 class="text-center"><%= user_game_piece_color %></h6>
             </div>
             <div class="col-6">
               <% if opponent.present? %>
-                <h5 class="text-center"><%= opponent.username %></h5>
+                <h5 class="text-center"><%= opponent.username %> - #<%= opponent.id %></h5>
                 <h6 class="text-center"><%= opponent_game_piece_color %></h6>
               <% else %>
                 <h6 class="text-center">Waiting for Opponent</h6>
@@ -18,7 +18,7 @@
           </div>
         </div>
         <div class="row align-self-center">
-          <h2 class="text-center"><%= @game.game_turn %></h2>
+          <h2 class="text-center game-turn-username"><%= game_turn_username %>'s turn</h2>
         </div>
         <div class="row align-self-center m-3">
           <div class="forfeit-button">
@@ -146,7 +146,6 @@ $(document).ready($(function() {
         $.ajax({
           type: 'PUT',
           url: `/pieces/${update_piece.id}`,
-          // beforeSend: function(xhr) { xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content')) },
           dataType: 'json',
           data: {
             piece: {
@@ -159,6 +158,10 @@ $(document).ready($(function() {
           success: function(data) {
             destination_square.empty();
             location.reload(true);
+
+          },
+          error: function(data) {
+            location.reload(true)
           }
         });
       }  

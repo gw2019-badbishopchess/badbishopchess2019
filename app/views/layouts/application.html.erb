@@ -77,6 +77,7 @@
                   <div class="modal-body text-center">
                     <%= f.hidden_field 'user_id', value: current_user.id %>
                     <%= f.hidden_field 'white_player_id', value: current_user.id %>
+                    <%= f.hidden_field 'game_turn', value: current_user.id %>
                     <h5>White Pieces</h5>
                       <%= f.submit 'White', :type => :image, :src => image_path("WhiteKing.png"), class: "btn btn-primary" %>
                   </div>

@@ -57,6 +57,14 @@ module GamesHelper
     return open_game_opponent(game).games.count
   end
 
+  def game_turn_username
+    if @game.game_turn == current_user.id
+      return current_user.username
+    else 
+      return opponent.username
+    end
+  end
+
   
 
 end

@@ -32,6 +32,7 @@
                   <%= simple_form_for game, url: join_game_path(game) do |f| %>
                       <%= f.hidden_field 'white_player_id', value: current_user.id  %>
                       <%= f.hidden_field 'state', value: 'in progress' %>
+                      <%= f.hidden_field 'game_turn', value: current_user.id %>
                       <span class="IndexJoinGame"><%= f.submit "Join as White Player", class: "btn btn-outline-dark"%></span> 
                   <% end %>
                 <% end %>
